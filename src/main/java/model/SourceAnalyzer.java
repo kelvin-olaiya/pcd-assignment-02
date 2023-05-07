@@ -1,6 +1,7 @@
 package model;
 
 import model.report.Report;
+import model.resources.Directory;
 
 public interface SourceAnalyzer {
 

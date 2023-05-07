@@ -1,7 +1,7 @@
 package controller.executors;
 
-import model.Directory;
-import model.SourceFile;
+import model.resources.Directory;
+import model.resources.SourceFile;
 import model.report.Report;
 import model.report.ReportImpl;
 

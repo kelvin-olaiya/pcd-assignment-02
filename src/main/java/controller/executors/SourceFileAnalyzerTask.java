@@ -1,6 +1,6 @@
 package controller.executors;
 
-import model.SourceFile;
+import model.resources.SourceFile;
 import model.report.Report;
 import model.report.ReportImpl;
 

@@ -2,6 +2,7 @@ package controller.executors;
 
 import model.*;
 import model.report.Report;
+import model.resources.Directory;
 
 import java.util.concurrent.ForkJoinPool;
 
