@@ -1,5 +1,6 @@
 package model;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -13,9 +14,7 @@ public class DirectoryImpl implements Directory {
         this.sourceFiles = new ArrayList<>(sourceFiles);
     }
 
-    public static Directory fromPath(String path) {
-        return null;
-    }
+
 
     @Override
     public List<Resource> getResources() {
