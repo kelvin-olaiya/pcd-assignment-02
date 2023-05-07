@@ -17,6 +17,10 @@ public class ReportImpl implements Report {
         addFile(new Pair<>(file, lines));
     }
 
+    public ReportImpl(SearchConfiguration searchConfiguration) {
+        this.configuration = searchConfiguration;
+    }
+
     private void addFile(Pair<String, Long> statistic) {
         var interval = this.configuration.getFileInterval(statistic.getY());
         addFile(interval, statistic);
@@ -56,5 +60,14 @@ public class ReportImpl implements Report {
             .forEach(interval ->
                 report.filesInInterval(interval).forEach(stat -> this.addFile(interval, stat))
             );
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder report = new StringBuilder();
+        for (var interval : getIntervals()) {
+            report.append(interval).append(": ").append(filesCount(interval)).append("\n");
+        }
+        return report.toString();
     }
 }

@@ -1,6 +1,6 @@
 package controller.executors;
 
-import model.*;
+import controller.SourceAnalyzer;
 import model.report.Report;
 import model.resources.Directory;
 
@@ -13,6 +13,10 @@ public class SourceAnalyzerExecutor implements SourceAnalyzer {
 
     public SourceAnalyzerExecutor() {
         this.configuration = new SearchConfiguration(5, 1000);
+    }
+
+    public SourceAnalyzerExecutor(SearchConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     @Override

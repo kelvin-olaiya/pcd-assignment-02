@@ -28,4 +28,9 @@ public class Interval {
     public int hashCode() {
         return Objects.hash(lowerBound, upperBound);
     }
+
+    @Override
+    public String toString() {
+        return "I[" + lowerBound + ", " + upperBound + ')';
+    }
 }

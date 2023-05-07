@@ -1,4 +1,4 @@
-package model;
+package controller;
 
 import model.report.Report;
 import model.resources.Directory;

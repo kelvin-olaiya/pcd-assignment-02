@@ -22,7 +22,7 @@ public class DirectoryAnalyzerTask extends RecursiveTask<Report> {
     @Override
     protected Report compute() {
         List<RecursiveTask<Report>> tasks = new ArrayList<>();
-        var report = new ReportImpl(searchConfiguration, "", 0L);
+        var report = new ReportImpl(searchConfiguration);
         for (var resource : directory.getResources()) {
             var task = resource.isDirectory() ?
                     new DirectoryAnalyzerTask((Directory) resource, searchConfiguration) :

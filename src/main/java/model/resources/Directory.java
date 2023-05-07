@@ -1,5 +1,7 @@
 package model.resources;
 
+import com.google.common.io.Files;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ public interface Directory extends Resource {
         for (File entry : Objects.requireNonNull(file.listFiles())) {
             if (entry.isDirectory()) {
                 directories.add(Directory.fromFile(entry));
-            } else if (entry.getName().endsWith(".java")) {
+            } else if (Files.getFileExtension(entry.getAbsolutePath()).equals("java")) {
                 sourceFiles.add(SourceFile.fromFile(entry));
             }
         }
