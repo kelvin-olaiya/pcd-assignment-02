@@ -1,21 +1,39 @@
 package controller.executors;
 
+import model.Directory;
+import model.SourceFile;
 import model.report.Report;
+import model.report.ReportImpl;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
 public class DirectoryAnalyzerTask extends RecursiveTask<Report> {
 
-    private final File directory;
+    private final Directory directory;
+    private final SearchConfiguration searchConfiguration;
 
-    DirectoryAnalyzerTask(File directory) {
+    DirectoryAnalyzerTask(Directory directory, SearchConfiguration searchConfiguration) {
         this.directory = directory;
+        this.searchConfiguration = searchConfiguration;
     }
 
     @Override
     protected Report compute() {
-        // TODO
-        return null;
+        List<RecursiveTask<Report>> tasks = new ArrayList<>();
+        var report = new ReportImpl(searchConfiguration, "", 0L);
+        for (var resource : directory.getResources()) {
+            var task = resource.isDirectory() ?
+                    new DirectoryAnalyzerTask((Directory) resource, searchConfiguration) :
+                    new SourceFileAnalyzerTask((SourceFile) resource, searchConfiguration);
+            tasks.add(task);
+            task.fork();
+        }
+        for (RecursiveTask<Report> task : tasks) {
+            report.aggregate(task.join());
+        }
+        return report;
     }
 }

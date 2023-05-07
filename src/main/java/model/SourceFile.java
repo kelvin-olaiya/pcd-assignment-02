@@ -17,6 +17,6 @@ public interface SourceFile extends Resource {
         if (!file.isFile()) {
             throw new IllegalArgumentException("The provided file is not a source file");
         }
-        return new SourceFileImpl(Files.readAllLines(file.toPath()));
+        return new SourceFileImpl(file.getName(), Files.readAllLines(file.toPath()));
     }
 }

@@ -28,6 +28,6 @@ public interface Directory extends Resource {
                 sourceFiles.add(SourceFile.fromFile(entry));
             }
         }
-        return new DirectoryImpl(directories, sourceFiles);
+        return new DirectoryImpl(file.getName(), directories, sourceFiles);
     }
 }
