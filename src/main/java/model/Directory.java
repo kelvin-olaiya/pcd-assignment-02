@@ -1,12 +1,10 @@
 package model;
 
-import java.io.File;
+import java.util.List;
 
 public interface Directory extends Resource {
 
-    String getPath();
-
-    File[] getResources();
+    List<Resource> getResources();
 
     @Override
     default boolean isDirectory() {

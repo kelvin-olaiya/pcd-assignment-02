@@ -1,22 +1,24 @@
 package model;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class DirectoryImpl implements Directory {
+    private final List<Directory> subDirectories;
+    private final List<SourceFile> sourceFiles;
 
-    private final String path;
+    public DirectoryImpl(List<Directory> subDirectories, List<SourceFile> sourceFiles) {
+        this.subDirectories = new ArrayList<>(subDirectories);
+        this.sourceFiles = new ArrayList<>(sourceFiles);
+    }
 
-    public DirectoryImpl(String path) {
-        this.path = path;
+    public static Directory fromPath(String path) {
+        return null;
     }
 
     @Override
-    public String getPath() {
-        return this.path;
-    }
-
-    @Override
-    public File[] getResources() {
-        return new File(path).listFiles();
+    public List<Resource> getResources() {
+        return Stream.concat(this.sourceFiles.stream(), this.subDirectories.stream()).toList();
     }
 }
