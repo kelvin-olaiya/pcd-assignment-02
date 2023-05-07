@@ -14,8 +14,8 @@ public class CLI {
         this.sourceAnalyzer = sourceAnalyzer;
     }
 
-    public void start() throws IOException {
-        Report report = this.sourceAnalyzer.getReport(Directory.fromFile(new File("/home/kelvin/")));
+    public void start(String directory) throws IOException {
+        Report report = this.sourceAnalyzer.getReport(Directory.fromFile(new File(directory)));
         System.out.println(report);
     }
 }

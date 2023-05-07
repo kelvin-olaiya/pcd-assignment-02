@@ -26,7 +26,7 @@ public interface Directory extends Resource {
         for (File entry : Objects.requireNonNull(file.listFiles())) {
             if (entry.isDirectory()) {
                 directories.add(Directory.fromFile(entry));
-            } else if (Files.getFileExtension(entry.getAbsolutePath()).equals("java")) {
+            } else if (entry.isFile() && Files.getFileExtension(entry.getAbsolutePath()).equals("java")) {
                 sourceFiles.add(SourceFile.fromFile(entry));
             }
         }

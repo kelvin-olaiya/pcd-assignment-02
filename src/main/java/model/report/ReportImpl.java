@@ -28,15 +28,12 @@ public class ReportImpl implements Report {
 
     private void addFile(Interval interval, Pair<String, Long> statistic) {
         counter.putIfAbsent(interval, new ArrayList<>());
-        counter.computeIfPresent(interval, (key, list) -> {
-            list.add(statistic);
-            return list;
-        });
+        counter.get(interval).add(statistic);
     }
 
     @Override
     public List<Interval> getIntervals() {
-        return counter.keySet().stream().toList();
+        return this.configuration.getIntervals();
     }
 
     @Override
@@ -46,6 +43,7 @@ public class ReportImpl implements Report {
 
     @Override
     public List<Pair<String, Long>> filesInInterval(Interval interval) {
+        counter.computeIfAbsent(interval, i -> new ArrayList<>());
         return Collections.unmodifiableList(counter.get(interval));
     }
 
