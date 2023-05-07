@@ -5,7 +5,6 @@ import model.SourceFile;
 import model.report.Report;
 import model.report.ReportImpl;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
