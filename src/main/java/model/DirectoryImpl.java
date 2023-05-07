@@ -1,11 +1,11 @@
 package model;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class DirectoryImpl implements Directory {
+
     private final List<Directory> subDirectories;
     private final List<SourceFile> sourceFiles;
 
@@ -13,8 +13,6 @@ public class DirectoryImpl implements Directory {
         this.subDirectories = new ArrayList<>(subDirectories);
         this.sourceFiles = new ArrayList<>(sourceFiles);
     }
-
-
 
     @Override
     public List<Resource> getResources() {

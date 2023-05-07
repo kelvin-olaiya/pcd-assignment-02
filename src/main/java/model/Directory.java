@@ -19,7 +19,6 @@ public interface Directory extends Resource {
         if (!file.isDirectory()) {
             throw new IllegalArgumentException("The provided file is not a directory");
         }
-
         List<Directory> directories = new ArrayList<>();
         List<SourceFile> sourceFiles = new ArrayList<>();
         for (File entry : Objects.requireNonNull(file.listFiles())) {
