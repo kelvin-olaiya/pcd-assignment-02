@@ -1,22 +1,29 @@
 package model.resources;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import java.io.FileReader;
 
-public interface SourceFile extends Resource {
+public class SourceFile implements Resource {
 
-    long linesCount();
+    private final File file;
 
-    @Override
-    default boolean isDirectory() {
-        return false;
+    SourceFile(File file) {
+        this.file = file;
     }
 
-    static SourceFile fromFile(File file) throws IOException {
-        if (!file.isFile()) {
-            throw new IllegalArgumentException("The provided file is not a source file");
-        }
-        return new SourceFileImpl(file.getName(), Files.readAllLines(file.toPath()));
+    public long linesCount() {
+        long count = 0;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            while (reader.readLine() != null) {
+                count++;
+            }
+        } catch (Exception ignored) {}
+        return count;
+    }
+
+    @Override
+    public String getName() {
+        return this.file.getName();
     }
 }

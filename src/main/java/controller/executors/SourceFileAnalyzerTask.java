@@ -1,8 +1,8 @@
 package controller.executors;
 
-import model.resources.SourceFile;
 import model.report.Report;
 import model.report.ReportImpl;
+import model.resources.SourceFile;
 
 import java.util.concurrent.RecursiveTask;
 

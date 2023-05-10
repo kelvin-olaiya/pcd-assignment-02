@@ -1,9 +1,10 @@
 package controller.executors;
 
-import model.resources.Directory;
 import model.report.Report;
 import model.report.ReportImpl;
+import model.resources.Directory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
@@ -24,10 +25,14 @@ public class DirectoryAnalyzerTask extends RecursiveTask<Report> {
     protected Report compute() {
         List<RecursiveTask<Report>> tasks = new ArrayList<>();
         var report = new ReportImpl(searchConfiguration);
-        for (var resource : directory.getResources()) {
-            var task = fromResource(resource, searchConfiguration);
-            tasks.add(task);
-            task.fork();
+        try {
+            for (var resource : directory.getResources()) {
+                var task = fromResource(resource, searchConfiguration);
+                tasks.add(task);
+                task.fork();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         for (RecursiveTask<Report> task : tasks) {
             report.aggregate(task.join());

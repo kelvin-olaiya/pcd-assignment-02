@@ -15,7 +15,7 @@ public class CLI {
     }
 
     public void start(String directory) throws IOException {
-        Report report = this.sourceAnalyzer.getReport(Directory.fromFile(new File(directory)));
+        Report report = this.sourceAnalyzer.getReport(new Directory(new File(directory)));
         System.out.println(report);
     }
 }

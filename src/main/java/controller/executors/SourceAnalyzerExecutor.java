@@ -23,7 +23,7 @@ public class SourceAnalyzerExecutor implements SourceAnalyzer {
     }
 
     public static RecursiveTask<Report> fromResource(Resource resource, SearchConfiguration configuration) {
-        return resource.isDirectory() ?
+        return resource instanceof Directory ?
                 new DirectoryAnalyzerTask((Directory) resource, configuration) :
                 new SourceFileAnalyzerTask((SourceFile) resource, configuration);
     }

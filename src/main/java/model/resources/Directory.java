@@ -1,35 +1,33 @@
 package model.resources;
 
-import com.google.common.io.Files;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
-public interface Directory extends Resource {
+public class Directory implements Resource {
 
-    List<Resource> getResources();
+    private final static Set<String> EXTENSIONS = Set.of("java");
+    private final File directory;
 
-    @Override
-    default boolean isDirectory() {
-        return true;
+    public Directory(File directory) {
+        this.directory = directory;
     }
 
-    static Directory fromFile(File file) throws IOException {
-        if (!file.isDirectory()) {
-            throw new IllegalArgumentException("The provided file is not a directory");
-        }
-        List<Directory> directories = new ArrayList<>();
-        List<SourceFile> sourceFiles = new ArrayList<>();
-        for (File entry : Objects.requireNonNull(file.listFiles())) {
-            if (entry.isDirectory()) {
-                directories.add(Directory.fromFile(entry));
-            } else if (entry.isFile() && Files.getFileExtension(entry.getAbsolutePath()).equals("java")) {
-                sourceFiles.add(SourceFile.fromFile(entry));
-            }
-        }
-        return new DirectoryImpl(file.getName(), directories, sourceFiles);
+    public List<Resource> getResources() throws IOException {
+        return Files.list(directory.toPath())
+                .map(Path::toFile)
+                .map(f -> Resource.fromFile(f, EXTENSIONS))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
+    }
+
+    @Override
+    public String getName() {
+        return this.directory.getName();
     }
 }
