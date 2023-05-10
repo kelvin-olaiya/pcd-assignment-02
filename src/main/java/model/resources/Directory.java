@@ -2,25 +2,21 @@ package model.resources;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class Directory implements Resource {
 
     private final static Set<String> EXTENSIONS = Set.of("java");
-    private final File directory;
+    private final String directoryPath;
 
     public Directory(File directory) {
-        this.directory = directory;
+        this.directoryPath = directory.getAbsolutePath();
     }
 
     public List<Resource> getResources() throws IOException {
-        return Files.list(directory.toPath())
-                .map(Path::toFile)
-                .map(f -> Resource.fromFile(f, EXTENSIONS))
+        return Arrays.stream(Objects.requireNonNull(new File(directoryPath).listFiles()))
+                .map(file -> Resource.fromFile(file, EXTENSIONS))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
@@ -28,6 +24,6 @@ public class Directory implements Resource {
 
     @Override
     public String getName() {
-        return this.directory.getName();
+        return Path.of(directoryPath).getFileName().toString();
     }
 }
