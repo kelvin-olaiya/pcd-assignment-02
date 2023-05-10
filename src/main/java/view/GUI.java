@@ -1,10 +1,12 @@
 package view;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 public class GUI {
 
+    private final static Border border = BorderFactory.createEmptyBorder(10, 20, 10, 20);
     private final JFrame frame = new JFrame("Assignment#02");
     private final DefaultListModel<String> countingListModel = new DefaultListModel<>();
     private final DefaultListModel<String> longestFilesModel = new DefaultListModel<>();
@@ -12,6 +14,7 @@ public class GUI {
     private final ListView leaderboard = new ListView(longestFilesModel);
     private final NumericBox totalFilesBox = new NumericBox("Files counted:");
     private final NumericBox durationBox = new NumericBox("Duration (ms):");
+    private final JTextField directory = new JTextField("./", 20);
     private final JButton startButton = new JButton("START");
     private final JButton stopButton = new JButton("STOP");
 
@@ -20,23 +23,47 @@ public class GUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Container panel = frame.getContentPane();
 
-        Box inputsPanel = Box.createHorizontalBox();
+        Box inputsPanel = Box.createVerticalBox();
+        Box inputPanelRow0 = Box.createHorizontalBox();
         NumericInputBox maxLinesBox = new NumericInputBox("Max. lines", 1000);
         NumericInputBox intervalsBox = new NumericInputBox("N. Intervals", 5);
         NumericInputBox longestFilesBox = new NumericInputBox("# of longestFiles", 5);
 
-        inputsPanel.add(maxLinesBox);
-        inputsPanel.add(Box.createGlue());
-        inputsPanel.add(intervalsBox);
-        inputsPanel.add(Box.createGlue());
-        inputsPanel.add(longestFilesBox);
-        inputsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        inputPanelRow0.add(maxLinesBox);
+        inputPanelRow0.add(Box.createGlue());
+        inputPanelRow0.add(intervalsBox);
+        inputPanelRow0.add(Box.createGlue());
+        inputPanelRow0.add(longestFilesBox);
+        inputPanelRow0.setBorder(border);
+
+        Box inputPanelRow1 = Box.createHorizontalBox();
+        inputPanelRow1.add(Box.createGlue());
+        var chooseDirButton = new JButton("Choose directory");
+        inputPanelRow1.add(chooseDirButton);
+        chooseDirButton.addActionListener(e -> {
+            var chooser = new JFileChooser();
+            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            var returnVal = chooser.showSaveDialog(new JFrame());
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                directory.setText(chooser.getSelectedFile().getAbsolutePath());
+            }
+        });
+        inputPanelRow1.add(Box.createGlue());
+        inputPanelRow1.setBorder(border);
+
+        Box inputPanelRow2 = Box.createHorizontalBox();
+        inputPanelRow2.add(directory);
+        inputPanelRow2.setBorder(border);
+
+        inputsPanel.add(inputPanelRow0);
+        inputsPanel.add(inputPanelRow1);
+        inputsPanel.add(inputPanelRow2);
 
         Box mainPanel = Box.createHorizontalBox();
         mainPanel.add(counting);
         mainPanel.add(Box.createGlue());
         mainPanel.add(leaderboard);
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        mainPanel.setBorder(border);
 
         Box controlsPanel = Box.createHorizontalBox();
         NumericInputBox workersInput = new NumericInputBox("# Workers", 1);
