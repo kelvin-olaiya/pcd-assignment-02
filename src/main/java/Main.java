@@ -9,7 +9,8 @@ import java.io.IOException;
 public class Main {
     public static void main(String... args) throws IOException {
         if (args.length == 0) {
-            new GUI(new SourceAnalyzerExecutor());
+            new GUI();
+            // new SourceAnalyzerExecutor()
         } else {
             String path = args[0];
             int maxLines = Integer.parseInt(args[1]);
