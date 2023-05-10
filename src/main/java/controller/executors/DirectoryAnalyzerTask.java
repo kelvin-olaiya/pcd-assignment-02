@@ -1,5 +1,6 @@
 package controller.executors;
 
+import model.report.ObservableReport;
 import model.report.Report;
 import model.report.ReportImpl;
 import model.resources.Directory;
@@ -15,16 +16,23 @@ public class DirectoryAnalyzerTask extends RecursiveTask<Report> {
 
     private final Directory directory;
     private final SearchConfiguration searchConfiguration;
+    private final Report report;
 
     DirectoryAnalyzerTask(Directory directory, SearchConfiguration searchConfiguration) {
         this.directory = directory;
         this.searchConfiguration = searchConfiguration;
+        this.report = new ReportImpl(searchConfiguration);
+    }
+
+    DirectoryAnalyzerTask(Directory directory, SearchConfiguration searchConfiguration, Report report) {
+        this.directory = directory;
+        this.searchConfiguration = searchConfiguration;
+        this.report = report;
     }
 
     @Override
     protected Report compute() {
         List<RecursiveTask<Report>> tasks = new ArrayList<>();
-        var report = new ReportImpl(searchConfiguration);
         try {
             for (var resource : directory.getResources()) {
                 var task = fromResource(resource, searchConfiguration);

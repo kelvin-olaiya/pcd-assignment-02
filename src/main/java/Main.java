@@ -7,9 +7,9 @@ import view.GUI;
 import java.io.IOException;
 
 public class Main {
-    public static void main(String... args) throws InterruptedException, IOException {
+    public static void main(String... args) throws IOException {
         if (args.length == 0) {
-            new GUI();
+            new GUI(new SourceAnalyzerExecutor());
         } else {
             String path = args[0];
             int maxLines = Integer.parseInt(args[1]);
@@ -18,7 +18,5 @@ public class Main {
             SourceAnalyzer sourceAnalyzer = new SourceAnalyzerExecutor(new SearchConfiguration(numIntervals, maxLines));
             new CLI(sourceAnalyzer).start(path);
         }
-
-
     }
 }

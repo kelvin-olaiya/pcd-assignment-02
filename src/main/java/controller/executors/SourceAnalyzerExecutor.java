@@ -1,7 +1,10 @@
 package controller.executors;
 
 import controller.SourceAnalyzer;
+import model.report.ObservableReport;
+import model.report.ObservableReportImpl;
 import model.report.Report;
+import model.report.ReportImpl;
 import model.resources.Directory;
 import model.resources.Resource;
 import model.resources.SourceFile;
@@ -34,7 +37,9 @@ public class SourceAnalyzerExecutor implements SourceAnalyzer {
     }
 
     @Override
-    public void analyzeSources(Directory directory) {
-        // TODO
+    public ObservableReport analyzeSources(Directory directory) {
+        ObservableReport observableReport = new ObservableReportImpl(new ReportImpl(this.configuration));
+        forkJoinPool.submit(new DirectoryAnalyzerTask(directory, this.configuration, observableReport));
+        return observableReport;
     }
 }
