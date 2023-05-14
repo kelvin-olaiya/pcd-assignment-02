@@ -4,12 +4,13 @@ import controller.SearchConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class ObservableReportImpl implements CompletableReport {
 
     private final Report report;
-    private final List<Consumer<Report>> onUpdateHandlers;
+    private final List<BiConsumer<List<StatLine>, List<String>>> onUpdateHandlers;
     private final List<Runnable> onAbortHandlers;
     private final List<Runnable> onCompleteHandlers;
 
@@ -46,7 +47,7 @@ public class ObservableReportImpl implements CompletableReport {
     }
 
     @Override
-    public void addUpdateHandler(Consumer<Report> onUpdateHandler) {
+    public void addUpdateHandler(BiConsumer<List<StatLine>, List<String>> onUpdateHandler) {
         this.onUpdateHandlers.add(onUpdateHandler);
     }
 
@@ -67,7 +68,13 @@ public class ObservableReportImpl implements CompletableReport {
 
     @Override
     public void notifyUpdate() {
-        this.onUpdateHandlers.forEach(handler -> handler.accept(this.report));
+        var statLines = this.report.getIntervals().stream()
+                .map(interval -> new StatLine(interval, this.report.filesCount(interval)))
+                .toList();
+        this.onUpdateHandlers.forEach(handler -> handler.accept(
+            statLines,
+            this.report.longestFiles(10).stream().map(Pair::getX).toList())
+        );
     }
 
     @Override
