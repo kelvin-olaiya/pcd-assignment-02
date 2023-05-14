@@ -1,6 +1,6 @@
 import controller.SourceAnalyzer;
 import controller.SearchConfiguration;
-import controller.executors.SourceAnalyzerExecutor;
+import controller.event_loop.SourceAnalyzerEventLoop;
 import view.CLI;
 import view.GUI;
 
@@ -17,7 +17,8 @@ public class Main {
             int maxLines = Integer.parseInt(args[1]);
             int numIntervals = Integer.parseInt(args[2]);
             int numLongestFiles = Integer.parseInt(args[3]);
-            SourceAnalyzer sourceAnalyzer = new SourceAnalyzerExecutor();
+            // SourceAnalyzer sourceAnalyzer = new SourceAnalyzerExecutor();
+            SourceAnalyzer sourceAnalyzer = new SourceAnalyzerEventLoop(new SearchConfiguration(numIntervals, maxLines));
             new CLI(sourceAnalyzer).start(path);
         }
     }
