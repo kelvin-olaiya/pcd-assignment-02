@@ -1,6 +1,8 @@
 package controller.executors;
 
 import controller.SearchConfiguration;
+import model.report.CompletableReport;
+import model.report.ObservableReport;
 import model.report.Report;
 import model.report.ReportImpl;
 import model.resources.Directory;
@@ -15,27 +17,20 @@ import static controller.executors.SourceAnalyzerExecutor.fromResource;
 public class DirectoryAnalyzerTask extends RecursiveTask<Report> {
 
     private final Directory directory;
-    private final SearchConfiguration searchConfiguration;
-    private final Report report;
+    private final SearchInstance searchInstance;
 
-    DirectoryAnalyzerTask(Directory directory, SearchConfiguration searchConfiguration) {
+    DirectoryAnalyzerTask(Directory directory, SearchInstance searchInstance) {
         this.directory = directory;
-        this.searchConfiguration = searchConfiguration;
-        this.report = new ReportImpl(searchConfiguration);
-    }
-
-    DirectoryAnalyzerTask(Directory directory, SearchConfiguration searchConfiguration, Report report) {
-        this.directory = directory;
-        this.searchConfiguration = searchConfiguration;
-        this.report = report;
+        this.searchInstance = searchInstance;
     }
 
     @Override
     protected Report compute() {
         List<RecursiveTask<Report>> tasks = new ArrayList<>();
+        var report = new ReportImpl(this.searchInstance.getConfiguration());
         try {
             for (var resource : directory.getResources()) {
-                var task = fromResource(resource, searchConfiguration);
+                var task = fromResource(resource, this.searchInstance);
                 tasks.add(task);
                 task.fork();
             }
@@ -45,6 +40,10 @@ public class DirectoryAnalyzerTask extends RecursiveTask<Report> {
         for (RecursiveTask<Report> task : tasks) {
             report.aggregate(task.join());
         }
+        this.searchInstance.getReport().ifPresent(r -> {
+            r.aggregate(report);
+            r.notifyUpdate();
+        });
         return report;
     }
 }

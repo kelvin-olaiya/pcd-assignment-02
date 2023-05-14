@@ -17,7 +17,7 @@ public class Main {
             int maxLines = Integer.parseInt(args[1]);
             int numIntervals = Integer.parseInt(args[2]);
             int numLongestFiles = Integer.parseInt(args[3]);
-            SourceAnalyzer sourceAnalyzer = new SourceAnalyzerExecutor(new SearchConfiguration(numIntervals, maxLines));
+            SourceAnalyzer sourceAnalyzer = new SourceAnalyzerExecutor();
             new CLI(sourceAnalyzer).start(path);
         }
     }

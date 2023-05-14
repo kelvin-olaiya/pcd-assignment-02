@@ -12,9 +12,9 @@ public class SourceFileAnalyzerTask extends RecursiveTask<Report> {
     private final SourceFile sourceFile;
     private final SearchConfiguration configuration;
 
-    SourceFileAnalyzerTask(SourceFile sourceFile, SearchConfiguration configuration) {
+    SourceFileAnalyzerTask(SourceFile sourceFile, SearchInstance searchInstance) {
         this.sourceFile = sourceFile;
-        this.configuration = configuration;
+        this.configuration = searchInstance.getConfiguration();
     }
 
     @Override

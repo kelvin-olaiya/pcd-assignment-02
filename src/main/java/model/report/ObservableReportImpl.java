@@ -1,5 +1,7 @@
 package model.report;
 
+import controller.SearchConfiguration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -11,8 +13,8 @@ public class ObservableReportImpl implements CompletableReport {
     private final List<Runnable> onAbortHandlers;
     private final List<Runnable> onCompleteHandlers;
 
-    public ObservableReportImpl(Report report) {
-        this.report = report;
+    public ObservableReportImpl(SearchConfiguration searchConfiguration) {
+        this.report = new ReportImpl(searchConfiguration);
         this.onUpdateHandlers = new ArrayList<>();
         this.onAbortHandlers = new ArrayList<>();
         this.onCompleteHandlers = new ArrayList<>();

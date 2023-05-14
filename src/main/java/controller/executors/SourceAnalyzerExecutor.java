@@ -14,32 +14,24 @@ import java.util.concurrent.RecursiveTask;
 public class SourceAnalyzerExecutor implements SourceAnalyzer {
 
     private final ForkJoinPool forkJoinPool = new ForkJoinPool();
-    private final SearchConfiguration configuration;
 
-    public SourceAnalyzerExecutor() {
-        this.configuration = new SearchConfiguration(5, 1000);
-    }
-
-    public SourceAnalyzerExecutor(SearchConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
-    public static RecursiveTask<Report> fromResource(Resource resource, SearchConfiguration configuration) {
+    public static RecursiveTask<Report> fromResource(Resource resource, SearchInstance searchInstance) {
         return resource instanceof Directory ?
-                new DirectoryAnalyzerTask((Directory) resource, configuration) :
-                new SourceFileAnalyzerTask((SourceFile) resource, configuration);
+                new DirectoryAnalyzerTask((Directory) resource, searchInstance) :
+                new SourceFileAnalyzerTask((SourceFile) resource, searchInstance);
     }
 
     @Override
     public Future<Report> getReport(Directory directory) {
-        return forkJoinPool.submit(new DirectoryAnalyzerTask(directory, this.configuration));
+        return forkJoinPool.submit(new DirectoryAnalyzerTask(directory, new SearchInstance()));
     }
 
     @Override
     public ObservableReport analyzeSources(Directory directory) {
-        CompletableReport observableReport = new ObservableReportImpl(new ReportImpl(this.configuration));
-        final SearchInstance searchInstance = new SearchInstance(observableReport);
-        forkJoinPool.submit(new DirectoryAnalyzerTask(directory, this.configuration));
+        var configuration = new SearchConfiguration(5, 1000);
+        CompletableReport observableReport = new ObservableReportImpl(configuration);
+        final SearchInstance searchInstance = new SearchInstance(configuration, observableReport);
+        forkJoinPool.submit(new DirectoryAnalyzerTask(directory, searchInstance));
         return observableReport;
     }
 }
