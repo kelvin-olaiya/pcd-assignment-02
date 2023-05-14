@@ -1,6 +1,6 @@
 package controller.executors;
 
-import model.report.ObservableReport;
+import controller.SearchConfiguration;
 import model.report.Report;
 import model.report.ReportImpl;
 import model.resources.Directory;

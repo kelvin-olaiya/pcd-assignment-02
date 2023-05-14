@@ -1,5 +1,5 @@
 import controller.SourceAnalyzer;
-import controller.executors.SearchConfiguration;
+import controller.SearchConfiguration;
 import controller.executors.SourceAnalyzerExecutor;
 import view.CLI;
 import view.GUI;

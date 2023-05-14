@@ -1,9 +1,6 @@
 package model.report;
 
-import controller.executors.SearchConfiguration;
-import model.report.Interval;
-import model.report.Pair;
-import model.report.Report;
+import controller.SearchConfiguration;
 
 import java.util.*;
 

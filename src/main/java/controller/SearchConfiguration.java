@@ -1,4 +1,4 @@
-package controller.executors;
+package controller;
 
 import model.report.Interval;
 
