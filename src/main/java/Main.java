@@ -5,9 +5,10 @@ import view.CLI;
 import view.GUI;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public class Main {
-    public static void main(String... args) throws IOException {
+    public static void main(String... args) throws IOException, ExecutionException, InterruptedException {
         if (args.length == 0) {
             new GUI();
             // new SourceAnalyzerExecutor()

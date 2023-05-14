@@ -10,6 +10,7 @@ import model.resources.Resource;
 import model.resources.SourceFile;
 
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Future;
 import java.util.concurrent.RecursiveTask;
 
 public class SourceAnalyzerExecutor implements SourceAnalyzer {
@@ -32,8 +33,8 @@ public class SourceAnalyzerExecutor implements SourceAnalyzer {
     }
 
     @Override
-    public Report getReport(Directory directory) {
-        return forkJoinPool.invoke(new DirectoryAnalyzerTask(directory, this.configuration));
+    public Future<Report> getReport(Directory directory) {
+        return forkJoinPool.submit(new DirectoryAnalyzerTask(directory, this.configuration));
     }
 
     @Override
