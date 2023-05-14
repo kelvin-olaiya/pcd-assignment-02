@@ -13,8 +13,6 @@ import java.util.concurrent.RecursiveTask;
 
 public class SourceAnalyzerExecutor implements SourceAnalyzer {
 
-    private final ForkJoinPool forkJoinPool = new ForkJoinPool();
-
     public static RecursiveTask<Report> fromResource(Resource resource, SearchInstance searchInstance) {
         return resource instanceof Directory ?
                 new DirectoryAnalyzerTask((Directory) resource, searchInstance) :
@@ -23,15 +21,29 @@ public class SourceAnalyzerExecutor implements SourceAnalyzer {
 
     @Override
     public Future<Report> getReport(Directory directory) {
+        ForkJoinPool forkJoinPool = new ForkJoinPool();
         return forkJoinPool.submit(new DirectoryAnalyzerTask(directory, new SearchInstance()));
     }
 
     @Override
     public ObservableReport analyzeSources(Directory directory) {
+        ForkJoinPool forkJoinPool = new ForkJoinPool();
         var configuration = new SearchConfiguration(5, 1000);
         CompletableReport observableReport = new ObservableReportImpl(configuration);
         final SearchInstance searchInstance = new SearchInstance(configuration, observableReport);
-        forkJoinPool.submit(new DirectoryAnalyzerTask(directory, searchInstance));
+        var future = forkJoinPool.submit(new DirectoryAnalyzerTask(directory, searchInstance));
+        observableReport.addOnAbortHandler(() -> {
+            forkJoinPool.shutdownNow();
+            observableReport.notifyCompletion();
+        });
+        new Thread(() -> {
+            try {
+                future.get();
+                observableReport.notifyCompletion();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
         return observableReport;
     }
 }

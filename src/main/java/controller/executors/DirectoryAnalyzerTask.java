@@ -1,8 +1,5 @@
 package controller.executors;
 
-import controller.SearchConfiguration;
-import model.report.CompletableReport;
-import model.report.ObservableReport;
 import model.report.Report;
 import model.report.ReportImpl;
 import model.resources.Directory;
@@ -40,10 +37,6 @@ public class DirectoryAnalyzerTask extends RecursiveTask<Report> {
         for (RecursiveTask<Report> task : tasks) {
             report.aggregate(task.join());
         }
-        this.searchInstance.getReport().ifPresent(r -> {
-            r.aggregate(report);
-            r.notifyUpdate();
-        });
         return report;
     }
 }

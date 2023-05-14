@@ -1,8 +1,14 @@
 package view;
 
+import controller.SourceAnalyzer;
+import controller.executors.SourceAnalyzerExecutor;
+import model.resources.Directory;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.io.File;
 
 public class GUI {
 
@@ -84,11 +90,32 @@ public class GUI {
             int intervals = (int) intervalsBox.spinner.getValue();
             int longestFiles = (int) longestFilesBox.spinner.getValue();
             int numberOfWorkers = (int) workersInput.spinner.getValue();
+            SourceAnalyzer sourceAnalyzer = new SourceAnalyzerExecutor();
+            var report = sourceAnalyzer.analyzeSources(new Directory(new File(directory.getText())));
+            report.addUpdateHandler((totalFiles, duration) -> {
+                SwingUtilities.invokeLater(() -> {
+                    countingListModel.clear();
+                    countingListModel.addAll(totalFiles.stream().map(Object::toString).toList());
+                });
+            });
+            report.addOnCompleteHandler(() -> {
+                SwingUtilities.invokeLater(() -> {
+                    startButton.setEnabled(true);
+                    stopButton.setEnabled(false);
+                });
+
+            });
             startButton.setEnabled(false);
             stopButton.setEnabled(true);
-        });
-        stopButton.addActionListener(e -> {
-            // TODO
+            ActionListener al = (s) -> {
+                report.abort();
+                SwingUtilities.invokeLater(() -> {
+                    startButton.setEnabled(true);
+                    stopButton.setEnabled(false);
+                });
+            };
+            stopButton.removeActionListener(al);
+            stopButton.addActionListener(al);
         });
         controlsPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         controlsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
