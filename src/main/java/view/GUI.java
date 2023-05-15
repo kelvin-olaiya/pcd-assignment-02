@@ -1,5 +1,6 @@
 package view;
 
+import controller.SearchConfiguration;
 import controller.SourceAnalyzer;
 import controller.executors.SourceAnalyzerExecutor;
 import model.resources.Directory;
@@ -89,8 +90,7 @@ public class GUI {
             int maxLines = (int) maxLinesBox.spinner.getValue();
             int intervals = (int) intervalsBox.spinner.getValue();
             int longestFiles = (int) longestFilesBox.spinner.getValue();
-            int numberOfWorkers = (int) workersInput.spinner.getValue();
-            SourceAnalyzer sourceAnalyzer = new SourceAnalyzerExecutor();
+            SourceAnalyzer sourceAnalyzer = new SourceAnalyzerExecutor(new SearchConfiguration(intervals, maxLines, longestFiles));
             var report = sourceAnalyzer.analyzeSources(new Directory(new File(directory.getText())));
             report.addUpdateHandler((totalFiles, duration) -> {
                 SwingUtilities.invokeLater(() -> {
@@ -100,6 +100,7 @@ public class GUI {
             });
             report.addOnCompleteHandler(() -> {
                 SwingUtilities.invokeLater(() -> {
+                    totalFilesBox.textField.setText(report.getIntervals().stream().map(report::filesCount).reduce(0L, Long::sum).toString());
                     startButton.setEnabled(true);
                     stopButton.setEnabled(false);
                 });

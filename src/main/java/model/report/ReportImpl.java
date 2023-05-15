@@ -45,9 +45,7 @@ public class ReportImpl implements Report {
     }
 
     @Override
-    public List<Pair<String, Integer>> longestFiles(int n) {
-        return null;
-    }
+    public List<Pair<String, Integer>> longestFiles(int n) { return new ArrayList<>(); }
 
     @Override
     public void aggregate(Report report) {

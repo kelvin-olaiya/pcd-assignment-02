@@ -12,8 +12,10 @@ public class ObservableReportImpl implements CompletableReport {
     private final List<BiConsumer<List<StatLine>, List<String>>> onUpdateHandlers;
     private final List<Runnable> onAbortHandlers;
     private final List<Runnable> onCompleteHandlers;
+    private final SearchConfiguration searchConfiguration;
 
     public ObservableReportImpl(SearchConfiguration searchConfiguration) {
+        this.searchConfiguration = searchConfiguration;
         this.report = new ReportImpl(searchConfiguration);
         this.onUpdateHandlers = new ArrayList<>();
         this.onAbortHandlers = new ArrayList<>();
@@ -72,7 +74,8 @@ public class ObservableReportImpl implements CompletableReport {
                 .map(interval -> new StatLine(interval, this.report.filesCount(interval)))
                 .toList();
         this.onUpdateHandlers.forEach(handler -> {
-            handler.accept(statLines, new ArrayList<>());
+            handler.accept(statLines,
+                    this.report.longestFiles(this.searchConfiguration.getNumLongestFiles()).stream().map(Pair::getX).toList());
         });
     }
 
