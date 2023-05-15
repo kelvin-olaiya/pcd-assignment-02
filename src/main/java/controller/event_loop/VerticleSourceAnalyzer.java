@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 
 public class VerticleSourceAnalyzer extends AbstractVerticle {
 
-
     private final Directory directory;
     private final SearchConfiguration configuration;
     private final CompletableFuture<Report> futureResult;
@@ -59,14 +58,16 @@ public class VerticleSourceAnalyzer extends AbstractVerticle {
     private void walk(String resource) {
         this.onNewResourcesToAnalyze();
         vertx.fileSystem().props(resource, props -> {
-            if (props.result().isDirectory()) {
+            if (props.result() != null && props.result().isDirectory()) {
                 vertx.fileSystem().readDir(resource, list -> {
-                    this.onFolderVisiting();
-                    for (var sub : list.result()) {
-                        walk(sub);
+                    if (list.result() != null) {
+                        this.onFolderVisiting();
+                        for (var sub : list.result()) {
+                            walk(sub);
+                        }
                     }
                 });
-            } else if (props.result().isRegularFile() && resource.endsWith(".java")) { // TODO: extract
+            } else if (props.result() != null && props.result().isRegularFile() && resource.endsWith(".java")) { // TODO: extract
                 vertx.fileSystem().readFile(resource, r -> {
                     analyzeFile(resource, r.result().toString());
                     onFileAnalyzed();
