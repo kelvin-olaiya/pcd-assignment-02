@@ -26,4 +26,8 @@ public class Directory implements Resource {
     public String getName() {
         return Path.of(directoryPath).getFileName().toString();
     }
+
+    public String getAbsolutePath() {
+        return Path.of(directoryPath).toAbsolutePath().toString();
+    }
 }

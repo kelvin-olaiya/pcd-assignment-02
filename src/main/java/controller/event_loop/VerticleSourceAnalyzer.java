@@ -27,7 +27,7 @@ public class VerticleSourceAnalyzer extends AbstractVerticle {
 
     @Override
     public void start() {
-        this.walk(this.directory.getName());
+        this.walk(this.directory.getAbsolutePath());
     }
 
     private void onNewResourcesToAnalyze() {
