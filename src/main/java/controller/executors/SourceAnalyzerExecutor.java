@@ -22,28 +22,32 @@ public class SourceAnalyzerExecutor implements SourceAnalyzer {
     @Override
     public Future<Report> getReport(Directory directory) {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
-        return forkJoinPool.submit(new DirectoryAnalyzerTask(directory, new SearchInstance()));
+        return forkJoinPool.submit(new DirectoryAnalyzerTask(
+                directory,
+                new SearchInstance(new SearchConfiguration(5, 0))));
     }
 
     @Override
     public ObservableReport analyzeSources(Directory directory) {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
-        var configuration = new SearchConfiguration(5, 1000);
-        CompletableReport observableReport = new ObservableReportImpl(configuration);
-        final SearchInstance searchInstance = new SearchInstance(configuration, observableReport);
+        var configuration = new SearchConfiguration(5, 0);
+        CompletableReport completableReport = new ObservableReportImpl(configuration);
+        final SearchInstance searchInstance = new SearchInstance(configuration, completableReport);
         var future = forkJoinPool.submit(new DirectoryAnalyzerTask(directory, searchInstance));
-        observableReport.addOnAbortHandler(() -> {
+        completableReport.addOnAbortHandler(() -> {
             forkJoinPool.shutdownNow();
-            observableReport.notifyCompletion();
+            forkJoinPool.close();
+            completableReport.notifyCompletion();
         });
         new Thread(() -> {
             try {
                 future.get();
-                observableReport.notifyCompletion();
+                completableReport.notifyCompletion();
+                forkJoinPool.close();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }).start();
-        return observableReport;
+        return completableReport;
     }
 }
