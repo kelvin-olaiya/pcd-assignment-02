@@ -122,7 +122,9 @@ public class GUI {
                     stopButton.setEnabled(false);
                 });
             };
-            stopButton.removeActionListener(al);
+            for(var l : stopButton.getActionListeners() ) {
+                stopButton.removeActionListener(l);
+            }
             stopButton.addActionListener(al);
         });
         controlsPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
