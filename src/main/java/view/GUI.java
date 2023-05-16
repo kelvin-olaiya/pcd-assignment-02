@@ -92,15 +92,22 @@ public class GUI {
             int longestFiles = (int) longestFilesBox.spinner.getValue();
             SourceAnalyzer sourceAnalyzer = new SourceAnalyzerExecutor(new SearchConfiguration(intervals, maxLines, longestFiles));
             var report = sourceAnalyzer.analyzeSources(new Directory(new File(directory.getText())));
-            report.addUpdateHandler((totalFiles, duration) -> {
+            report.addUpdateHandler((counter, longestFilesList) -> {
                 SwingUtilities.invokeLater(() -> {
                     countingListModel.clear();
-                    countingListModel.addAll(totalFiles.stream().map(Object::toString).toList());
+                    countingListModel.addAll(counter.stream().map(Object::toString).toList());
+                    longestFilesModel.clear();
+                    longestFilesModel.addAll(longestFilesList);
                 });
             });
             report.addOnCompleteHandler(() -> {
                 SwingUtilities.invokeLater(() -> {
-                    totalFilesBox.textField.setText(report.getIntervals().stream().map(report::filesCount).reduce(0L, Long::sum).toString());
+                    totalFilesBox.textField.setText(
+                            report.getIntervals().stream()
+                                    .map(report::filesCount)
+                                    .reduce(0, Integer::sum)
+                                    .toString()
+                    );
                     startButton.setEnabled(true);
                     stopButton.setEnabled(false);
                 });

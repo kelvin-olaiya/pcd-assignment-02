@@ -6,11 +6,9 @@ public interface Report {
 
     List<Interval> getIntervals();
 
-    Long filesCount(Interval interval);
+    Integer filesCount(Interval interval);
 
-    List<Pair<String, Long>> filesInInterval(Interval interval);
-
-    List<Pair<String, Integer>> longestFiles(int n);
+    List<Pair<String, Integer>> longestFiles();
 
     void aggregate(Report report);
 }

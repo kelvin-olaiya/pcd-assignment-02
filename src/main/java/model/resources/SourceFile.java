@@ -11,8 +11,8 @@ public class SourceFile implements Resource {
         this.filePath = file.getAbsolutePath();
     }
 
-    public long linesCount() {
-        long count = 0;
+    public int linesCount() {
+        int count = 0;
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             while (reader.readLine() != null) {
                 count++;

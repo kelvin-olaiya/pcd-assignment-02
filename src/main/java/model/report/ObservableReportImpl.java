@@ -29,18 +29,13 @@ public class ObservableReportImpl implements CompletableReport {
     }
 
     @Override
-    synchronized public Long filesCount(Interval interval) {
+    synchronized public Integer filesCount(Interval interval) {
         return this.report.filesCount(interval);
     }
 
     @Override
-    synchronized public List<Pair<String, Long>> filesInInterval(Interval interval) {
-        return this.report.filesInInterval(interval);
-    }
-
-    @Override
-    synchronized public List<Pair<String, Integer>> longestFiles(int n) {
-        return this.report.longestFiles(n);
+    synchronized public List<Pair<String, Integer>> longestFiles() {
+        return this.report.longestFiles();
     }
 
     @Override
@@ -74,8 +69,7 @@ public class ObservableReportImpl implements CompletableReport {
                 .map(interval -> new StatLine(interval, this.report.filesCount(interval)))
                 .toList();
         this.onUpdateHandlers.forEach(handler -> {
-            handler.accept(statLines,
-                    this.report.longestFiles(this.searchConfiguration.getNumLongestFiles()).stream().map(Pair::getX).toList());
+            handler.accept(statLines, this.report.longestFiles().stream().map(Pair::getX).toList());
         });
     }
 

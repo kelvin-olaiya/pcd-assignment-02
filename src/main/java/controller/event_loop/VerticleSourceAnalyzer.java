@@ -40,7 +40,7 @@ public class VerticleSourceAnalyzer extends AbstractVerticle {
 
     private void analyzeFile(String file, String content) {
         Matcher m = Pattern.compile("\r\n|\r|\n").matcher(content);
-        long lines = 0;
+        int lines = 0;
         while (m.find()) {
             lines++;
         }

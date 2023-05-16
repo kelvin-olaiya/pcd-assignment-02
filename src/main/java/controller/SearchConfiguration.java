@@ -18,10 +18,8 @@ public class SearchConfiguration {
         int intervalSize = maxLines / (numIntervals - 1);
         int i;
         for (i = 0; i < maxLines; i+=intervalSize) {
-            System.out.println(i);
             intervals.add(new Interval(i, i + intervalSize));
         }
-        System.out.println("Ricors");
         intervals.add(new Interval(i, Integer.MAX_VALUE));
         this.numLongestFiles = numLongestFiles;
     }
