@@ -3,7 +3,10 @@ package controller.event_loop;
 import controller.SearchConfiguration;
 import controller.SourceAnalyzer;
 import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.EventBus;
+import model.report.CompletableReport;
 import model.report.ObservableReport;
+import model.report.ObservableReportImpl;
 import model.report.Report;
 import model.resources.Directory;
 
@@ -27,7 +30,14 @@ public class SourceAnalyzerEventLoop implements SourceAnalyzer {
 
     @Override
     public ObservableReport analyzeSources(Directory directory) {
-        // TODO
-        return null;
+        CompletableReport completableReport = new ObservableReportImpl(this.configuration);
+        Vertx vertx = Vertx.vertx();
+        var verticle = new ObservableVerticleSourceAnalyzer(directory, this.configuration, completableReport);
+        vertx.deployVerticle(verticle);
+        completableReport.addOnAbortHandler(() -> {
+            EventBus eb = vertx.eventBus();
+            eb.publish("shutdown-topic", "ciao");
+        });
+        return completableReport;
     }
 }
