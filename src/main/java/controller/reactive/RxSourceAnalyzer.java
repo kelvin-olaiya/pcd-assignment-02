@@ -3,7 +3,6 @@ package controller.reactive;
 import controller.SearchConfiguration;
 import controller.SourceAnalyzer;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import model.report.*;
 import model.resources.Directory;
@@ -18,11 +17,11 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
-public class SourceAnalyzerRx implements SourceAnalyzer {
+public class RxSourceAnalyzer implements SourceAnalyzer {
 
     private final SearchConfiguration configuration;
 
-    public SourceAnalyzerRx(SearchConfiguration configuration) {
+    public RxSourceAnalyzer(SearchConfiguration configuration) {
         this.configuration = configuration;
     }
     @Override

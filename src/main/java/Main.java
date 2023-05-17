@@ -1,6 +1,6 @@
 import controller.SearchConfiguration;
 import controller.SourceAnalyzer;
-import controller.reactive.SourceAnalyzerRx;
+import controller.reactive.RxSourceAnalyzer;
 import view.CLI;
 import view.GUI;
 
@@ -19,7 +19,7 @@ public class Main {
             SearchConfiguration searchConfiguration = new SearchConfiguration(numIntervals, maxLines, numLongestFiles);
             // SourceAnalyzer sourceAnalyzer = new ExecutorSourceAnalyzer(searchConfiguration);
             // SourceAnalyzer sourceAnalyzer = new EventLoopSourceAnalyzer(searchConfiguration);
-            SourceAnalyzer sourceAnalyzer = new SourceAnalyzerRx(searchConfiguration);
+            SourceAnalyzer sourceAnalyzer = new RxSourceAnalyzer(searchConfiguration);
             System.out.println(path);
             new CLI(sourceAnalyzer).start(path);
         }
