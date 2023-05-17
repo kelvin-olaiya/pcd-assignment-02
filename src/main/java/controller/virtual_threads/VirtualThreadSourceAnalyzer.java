@@ -15,14 +15,14 @@ public class VirtualThreadSourceAnalyzer implements SourceAnalyzer {
 
     private final SearchConfiguration configuration;
 
-    VirtualThreadSourceAnalyzer(SearchConfiguration configuration) {
+    public VirtualThreadSourceAnalyzer(SearchConfiguration configuration) {
         this.configuration = configuration;
     }
 
     @Override
     public Future<Report> getReport(Directory directory) {
         ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
-        return executor.submit(new VTDirectoryCallable(directory, executor));
+        return executor.submit(new VTDirectoryCallable(directory, configuration, executor));
     }
 
     @Override

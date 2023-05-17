@@ -2,6 +2,7 @@ import controller.SearchConfiguration;
 import controller.SourceAnalyzer;
 import controller.executors.ExecutorSourceAnalyzer;
 import controller.event_loop.EventLoopSourceAnalyzer;
+import controller.virtual_threads.VirtualThreadSourceAnalyzer;
 import view.CLI;
 import view.GUI;
 
@@ -18,7 +19,8 @@ public class Main {
             int numIntervals = Integer.parseInt(args[2]);
             int numLongestFiles = Integer.parseInt(args[3]);
             SearchConfiguration searchConfiguration = new SearchConfiguration(numIntervals, maxLines, numLongestFiles);
-            SourceAnalyzer sourceAnalyzer = new ExecutorSourceAnalyzer(searchConfiguration);
+//            SourceAnalyzer sourceAnalyzer = new ExecutorSourceAnalyzer(searchConfiguration);
+            SourceAnalyzer sourceAnalyzer = new VirtualThreadSourceAnalyzer(searchConfiguration);
 //             SourceAnalyzer sourceAnalyzer = new EventLoopSourceAnalyzer(searchConfiguration);
             System.out.println(path);
             new CLI(sourceAnalyzer).start(path);
