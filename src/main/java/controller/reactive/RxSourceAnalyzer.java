@@ -24,47 +24,56 @@ public class RxSourceAnalyzer implements SourceAnalyzer {
     public RxSourceAnalyzer(SearchConfiguration configuration) {
         this.configuration = configuration;
     }
+
+    private Observable<SourceFile> fromDirectory(Directory directory) {
+        return fromDirectory(directory, new Flag());
+    }
+
+    private Observable<SourceFile> fromDirectory(Directory directory, Flag stopFlag) {
+        Observable<SourceFile> observable = Observable.create(emitter -> {
+            try(var filesStream = Files.walk(Path.of(directory.getAbsolutePath()))) {
+                filesStream.filter(path -> !Files.isDirectory(path))
+                        .map(p -> Resource.fromFile(p.toFile(), Set.of("java")))
+                        .filter(Optional::isPresent)
+                        .map(o -> (SourceFile) o.get())
+                        .forEach(s -> {
+                            if(stopFlag.isSet()) {
+                                throw new RuntimeException();
+                            }
+                            emitter.onNext(s);
+                        });
+            } catch (IOException ignore) {
+            } finally {
+                emitter.onComplete();
+            }
+        });
+        return observable;
+    }
     @Override
     public Future<Report> getReport(Directory directory) {
-        CompletableFuture<Report> futureResult = new CompletableFuture<>();
-        try {
-            CompletableReport report = new ObservableReportImpl(this.configuration);
-            Observable.fromStream(Files.walk(Path.of(directory.getAbsolutePath())))
-                    .filter(path -> !Files.isDirectory(path))
-                    .map(p -> Resource.fromFile(p.toFile(), Set.of("java")))
-                    .filter(Optional::isPresent)
-                    .map(o -> (SourceFile) o.get())
-                    .subscribeOn(Schedulers.newThread())
-                    .map(resource -> new ReportImpl(this.configuration, resource.getName(), resource.linesCount()))
-                    .doOnNext(report::aggregate)
-                    .doOnComplete(() -> futureResult.complete(report))
-                    .subscribe();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return futureResult;
+        CompletableFuture<Report> future = new CompletableFuture<>();
+        CompletableReport report = new ObservableReportImpl(this.configuration);
+        fromDirectory(directory)
+                .map(resource -> new ReportImpl(this.configuration, resource.getName(), resource.linesCount()))
+                .doOnNext(report::aggregate)
+                .doOnComplete(() -> future.complete(report))
+                .subscribe();
+        return future;
     }
 
     @Override
     public ObservableReport analyzeSources(Directory directory) {
         CompletableReport report = new ObservableReportImpl(this.configuration);
-        try {
-            Observable.fromStream(Files.walk(Path.of(directory.getAbsolutePath())))
-                    .filter(path -> !Files.isDirectory(path))
-                    .map(p -> Resource.fromFile(p.toFile(), Set.of("java")))
-                    .filter(Optional::isPresent)
-                    .map(o -> (SourceFile) o.get())
-                    .subscribeOn(Schedulers.newThread())
-                    .map(resource -> new ReportImpl(this.configuration, resource.getName(), resource.linesCount()))
-                    .doOnNext(r -> {
-                        report.aggregate(r);
-                        report.notifyUpdate();
-                    })
-                    .doOnComplete(report::notifyCompletion)
-                    .subscribe();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Flag stopFlag = new Flag();
+        report.addOnAbortHandler(stopFlag::set);
+        fromDirectory(directory, stopFlag).subscribeOn(Schedulers.io())
+            .map(resource -> new ReportImpl(this.configuration, resource.getName(), resource.linesCount()))
+            .doOnNext(r -> {
+                report.aggregate(r);
+                report.notifyUpdate();
+            })
+            .doOnComplete(report::notifyCompletion)
+            .subscribe();
         return report;
     }
 }
