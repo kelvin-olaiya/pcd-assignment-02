@@ -11,6 +11,7 @@ import model.report.Report;
 import model.resources.Directory;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 public class SourceAnalyzerEventLoop implements SourceAnalyzer {
 
@@ -21,7 +22,7 @@ public class SourceAnalyzerEventLoop implements SourceAnalyzer {
     }
 
     @Override
-    public CompletableFuture<Report> getReport(Directory directory) {
+    public Future<Report> getReport(Directory directory) {
         CompletableFuture<Report> futureResult = new CompletableFuture<>();
         Vertx vertx = Vertx.vertx();
         vertx.deployVerticle(new VerticleSourceAnalyzer(directory, this.configuration, futureResult));
