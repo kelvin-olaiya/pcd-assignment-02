@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
-import static controller.executors.SourceAnalyzerExecutor.fromResource;
+import static controller.executors.ExecutorSourceAnalyzer.fromResource;
 
 public class DirectoryAnalyzerTask extends RecursiveTask<Report> {
 
