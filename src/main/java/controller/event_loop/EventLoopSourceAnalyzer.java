@@ -13,11 +13,11 @@ import model.resources.Directory;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
-public class SourceAnalyzerEventLoop implements SourceAnalyzer {
+public class EventLoopSourceAnalyzer implements SourceAnalyzer {
 
     private final SearchConfiguration configuration;
 
-    public SourceAnalyzerEventLoop(SearchConfiguration configuration) {
+    public EventLoopSourceAnalyzer(SearchConfiguration configuration) {
         this.configuration = configuration;
     }
 

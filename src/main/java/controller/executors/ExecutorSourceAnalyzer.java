@@ -11,11 +11,11 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 import java.util.concurrent.RecursiveTask;
 
-public class SourceAnalyzerExecutor implements SourceAnalyzer {
+public class ExecutorSourceAnalyzer implements SourceAnalyzer {
 
     private final SearchConfiguration searchConfiguration;
 
-    public SourceAnalyzerExecutor(SearchConfiguration searchConfiguration) {
+    public ExecutorSourceAnalyzer(SearchConfiguration searchConfiguration) {
         this.searchConfiguration = searchConfiguration;
     }
 
