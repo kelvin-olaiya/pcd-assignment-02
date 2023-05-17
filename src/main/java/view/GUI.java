@@ -4,6 +4,7 @@ import controller.SearchConfiguration;
 import controller.SourceAnalyzer;
 import controller.executors.ExecutorSourceAnalyzer;
 import controller.event_loop.EventLoopSourceAnalyzer;
+import controller.reactive.SourceAnalyzerRx;
 import model.resources.Directory;
 
 import javax.swing.*;
@@ -91,8 +92,9 @@ public class GUI {
             int maxLines = (int) maxLinesBox.spinner.getValue();
             int intervals = (int) intervalsBox.spinner.getValue();
             int longestFiles = (int) longestFilesBox.spinner.getValue();
-            SourceAnalyzer sourceAnalyzer = new ExecutorSourceAnalyzer(new SearchConfiguration(intervals, maxLines, longestFiles));
-//            SourceAnalyzer sourceAnalyzer = new EventLoopSourceAnalyzer(new SearchConfiguration(intervals, maxLines, longestFiles));
+            // SourceAnalyzer sourceAnalyzer = new ExecutorSourceAnalyzer(new SearchConfiguration(intervals, maxLines, longestFiles));
+            // SourceAnalyzer sourceAnalyzer = new EventLoopSourceAnalyzer(new SearchConfiguration(intervals, maxLines, longestFiles));
+            SourceAnalyzer sourceAnalyzer = new SourceAnalyzerRx(new SearchConfiguration(intervals, maxLines, longestFiles));
             var report = sourceAnalyzer.analyzeSources(new Directory(new File(directory.getText())));
             report.addUpdateHandler((counter, longestFilesList) -> {
                 SwingUtilities.invokeLater(() -> {

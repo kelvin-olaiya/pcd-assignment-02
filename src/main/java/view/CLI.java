@@ -5,7 +5,6 @@ import model.report.Report;
 import model.resources.Directory;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -18,7 +17,6 @@ public class CLI {
 
     public void start(String directory) throws ExecutionException, InterruptedException {
         Future<Report> futureResult = this.sourceAnalyzer.getReport(new Directory(new File(directory)));
-        var report = futureResult.get();
-        System.out.println(report);
+        System.out.println(futureResult.get());
     }
 }
