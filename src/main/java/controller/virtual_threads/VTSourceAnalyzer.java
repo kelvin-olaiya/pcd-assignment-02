@@ -10,11 +10,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class VirtualThreadSourceAnalyzer implements SourceAnalyzer {
+public class VTSourceAnalyzer implements SourceAnalyzer {
 
     private final SearchConfiguration configuration;
 
-    public VirtualThreadSourceAnalyzer(SearchConfiguration configuration) {
+    public VTSourceAnalyzer(SearchConfiguration configuration) {
         this.configuration = configuration;
     }
 
