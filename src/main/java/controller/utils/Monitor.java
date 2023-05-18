@@ -7,8 +7,8 @@ public class Monitor {
     private final ReentrantLock lock = new ReentrantLock();
 
     public <T> T on(Callable<T> callable) {
+        lock.lock();
         try {
-            lock.unlock();
             return callable.call();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -19,7 +19,7 @@ public class Monitor {
 
     public void on(Runnable runnable) {
         try {
-            lock.unlock();
+            lock.lock();
             runnable.run();
         } catch (Exception e) {
             throw new RuntimeException(e);
