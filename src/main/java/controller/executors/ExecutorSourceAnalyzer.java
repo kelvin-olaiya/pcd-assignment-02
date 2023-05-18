@@ -1,7 +1,8 @@
 package controller.executors;
 
-import controller.SearchConfiguration;
+import controller.utils.SearchConfiguration;
 import controller.SourceAnalyzer;
+import controller.utils.SearchInstance;
 import model.report.*;
 import model.resources.Directory;
 import model.resources.Resource;

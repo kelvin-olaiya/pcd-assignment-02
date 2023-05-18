@@ -1,6 +1,6 @@
 package controller.event_loop;
 
-import controller.SearchConfiguration;
+import controller.utils.SearchConfiguration;
 import io.vertx.core.AbstractVerticle;
 import model.resources.Directory;
 

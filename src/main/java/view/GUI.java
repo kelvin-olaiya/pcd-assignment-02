@@ -1,6 +1,6 @@
 package view;
 
-import controller.SearchConfiguration;
+import controller.utils.SearchConfiguration;
 import controller.SourceAnalyzer;
 import controller.reactive.RxSourceAnalyzer;
 import model.resources.Directory;

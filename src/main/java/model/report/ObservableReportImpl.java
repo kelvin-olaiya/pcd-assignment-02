@@ -1,6 +1,6 @@
 package model.report;
 
-import controller.SearchConfiguration;
+import controller.utils.SearchConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;

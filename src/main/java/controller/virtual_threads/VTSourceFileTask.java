@@ -1,6 +1,6 @@
 package controller.virtual_threads;
 
-import controller.SearchConfiguration;
+import controller.utils.SearchConfiguration;
 import model.report.Report;
 import model.report.ReportImpl;
 import model.resources.SourceFile;

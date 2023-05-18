@@ -1,6 +1,6 @@
 package controller.virtual_threads;
 
-import controller.SearchConfiguration;
+import controller.utils.SearchConfiguration;
 import model.report.Report;
 import model.report.ReportImpl;
 import model.resources.Directory;
@@ -26,13 +26,6 @@ public class VTDirectoryTask implements Callable<Report> {
         this.executor = executor;
     }
 
-    private Callable<Report> fromResource(Resource resource) {
-        if (resource instanceof Directory directoryResource) {
-            return new VTDirectoryTask(directoryResource, configuration, executor);
-        }
-        return new VTSourceFileTask((SourceFile) resource, configuration);
-    }
-
     @Override
     public Report call() throws Exception {
         List<Future<Report>> results = new ArrayList<>();
@@ -49,5 +42,12 @@ public class VTDirectoryTask implements Callable<Report> {
             report.aggregate(result.get());
         }
         return report;
+    }
+
+    private Callable<Report> fromResource(Resource resource) {
+        if (resource instanceof Directory directoryResource) {
+            return new VTDirectoryTask(directoryResource, configuration, executor);
+        }
+        return new VTSourceFileTask((SourceFile) resource, configuration);
     }
 }

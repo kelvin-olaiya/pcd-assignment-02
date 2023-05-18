@@ -1,6 +1,6 @@
-package controller.executors;
+package controller.utils;
 
-import controller.SearchConfiguration;
+import controller.utils.SearchConfiguration;
 import model.report.CompletableReport;
 
 import java.util.Optional;
@@ -16,10 +16,6 @@ public class SearchInstance {
     }
     public SearchInstance(SearchConfiguration configuration) {
         this(configuration, null);
-    }
-
-    public SearchInstance() {
-        this(new SearchConfiguration(5, 1000));
     }
 
     public Optional<CompletableReport> getReport() {

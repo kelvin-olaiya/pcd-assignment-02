@@ -1,4 +1,4 @@
-import controller.SearchConfiguration;
+import controller.utils.SearchConfiguration;
 import controller.SourceAnalyzer;
 import controller.virtual_threads.VTSourceAnalyzer;
 import view.CLI;

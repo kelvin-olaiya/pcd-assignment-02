@@ -1,5 +1,6 @@
 package controller.executors;
 
+import controller.utils.SearchInstance;
 import model.report.Report;
 import model.report.ReportImpl;
 import model.resources.Directory;

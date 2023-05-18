@@ -1,16 +1,10 @@
 package controller.event_loop;
 
-import controller.SearchConfiguration;
-import io.vertx.core.AbstractVerticle;
+import controller.utils.SearchConfiguration;
 import io.vertx.core.eventbus.EventBus;
 import model.report.CompletableReport;
-import model.report.Report;
 import model.report.ReportImpl;
 import model.resources.Directory;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ObservableVerticleSourceAnalyzer extends AbstractVerticleSourceAnalyzer {
 

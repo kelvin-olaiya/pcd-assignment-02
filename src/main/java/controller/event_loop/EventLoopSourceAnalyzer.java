@@ -1,6 +1,6 @@
 package controller.event_loop;
 
-import controller.SearchConfiguration;
+import controller.utils.SearchConfiguration;
 import controller.SourceAnalyzer;
 import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;

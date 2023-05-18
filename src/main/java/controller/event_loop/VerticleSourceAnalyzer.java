@@ -1,6 +1,6 @@
 package controller.event_loop;
 
-import controller.SearchConfiguration;
+import controller.utils.SearchConfiguration;
 import model.report.Report;
 import model.report.ReportImpl;
 import model.resources.Directory;
