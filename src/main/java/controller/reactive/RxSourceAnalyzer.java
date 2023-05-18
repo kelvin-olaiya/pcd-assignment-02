@@ -30,7 +30,7 @@ public class RxSourceAnalyzer implements SourceAnalyzer {
     }
 
     private Observable<SourceFile> fromDirectory(Directory directory, Flag stopFlag) {
-        Observable<SourceFile> observable = Observable.create(emitter -> {
+        return Observable.create(emitter -> {
             new Thread(() -> {
                 try(var filesStream = Files.walk(Path.of(directory.getAbsolutePath()))) {
                     filesStream.filter(path -> !Files.isDirectory(path))
@@ -49,7 +49,6 @@ public class RxSourceAnalyzer implements SourceAnalyzer {
                 }
             }).start();
         });
-        return observable;
     }
     @Override
     public Future<Report> getReport(Directory directory) {
