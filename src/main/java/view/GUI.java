@@ -97,6 +97,7 @@ public class GUI {
             int longestFiles = (int) longestFilesBox.spinner.getValue();
             SearchConfiguration searchConfiguration = new SearchConfiguration(intervals, maxLines, longestFiles);
             SourceAnalyzer sourceAnalyzerInstance = getSourceAnalyzerInstance(this.sourceAnalyzer, searchConfiguration);
+            long startTime = System.currentTimeMillis();
             var report = sourceAnalyzerInstance.analyzeSources(new Directory(new File(directory.getText())));
             report.addUpdateHandler((counter, longestFilesList) -> {
                 SwingUtilities.invokeLater(() -> {
@@ -114,6 +115,7 @@ public class GUI {
                                     .reduce(0, Integer::sum)
                                     .toString()
                     );
+                    durationBox.textField.setText(String.valueOf(System.currentTimeMillis() - startTime));
                     startButton.setEnabled(true);
                     stopButton.setEnabled(false);
                 });
