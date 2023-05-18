@@ -7,12 +7,12 @@ import model.resources.SourceFile;
 
 import java.util.concurrent.Callable;
 
-public class VTFileCallable implements Callable<Report> {
+public class VTSourceFileTask implements Callable<Report> {
 
     private final SourceFile file;
     private final SearchConfiguration configuration;
 
-    VTFileCallable(SourceFile file, SearchConfiguration configuration) {
+    VTSourceFileTask(SourceFile file, SearchConfiguration configuration) {
         this.file = file;
         this.configuration = configuration;
     }

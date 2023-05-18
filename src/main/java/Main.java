@@ -23,7 +23,7 @@ public class Main {
             SourceAnalyzer sourceAnalyzer = new VirtualThreadSourceAnalyzer(searchConfiguration);
             // SourceAnalyzer sourceAnalyzer = new EventLoopSourceAnalyzer(searchConfiguration);
             // SourceAnalyzer sourceAnalyzer = new ExecutorSourceAnalyzer(searchConfiguration);
-            SourceAnalyzer sourceAnalyzer = new RxSourceAnalyzer(searchConfiguration);
+            // SourceAnalyzer sourceAnalyzer = new RxSourceAnalyzer(searchConfiguration);
             System.out.println(path);
             new CLI(sourceAnalyzer).start(path);
         }

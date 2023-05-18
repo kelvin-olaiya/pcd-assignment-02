@@ -12,17 +12,14 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.RecursiveTask;
 
-import static controller.executors.ExecutorSourceAnalyzer.fromResource;
-
-public class VTDirectoryCallable implements Callable<Report> {
+public class VTDirectoryTask implements Callable<Report> {
 
     private final Directory directory;
     private final ExecutorService executor;
     private final SearchConfiguration configuration;
 
-    VTDirectoryCallable(Directory directory, SearchConfiguration configuration, ExecutorService executor) {
+    VTDirectoryTask(Directory directory, SearchConfiguration configuration, ExecutorService executor) {
         this.directory = directory;
         this.configuration = configuration;
         this.executor = executor;
@@ -35,9 +32,9 @@ public class VTDirectoryCallable implements Callable<Report> {
             for (var resource : directory.getResources()) {
                 Future<Report> future = null;
                 if (resource instanceof Directory directoryResource) {
-                    future = executor.submit(new VTDirectoryCallable(directoryResource, configuration, executor));
+                    future = executor.submit(new VTDirectoryTask(directoryResource, configuration, executor));
                 } else if (resource instanceof SourceFile sourceFileResource) {
-                    future = executor.submit(new VTFileCallable(sourceFileResource, configuration));
+                    future = executor.submit(new VTSourceFileTask(sourceFileResource, configuration));
                 }
                 if (future != null) {
                     results.add(future);

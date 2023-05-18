@@ -6,7 +6,6 @@ import model.report.ObservableReport;
 import model.report.Report;
 import model.resources.Directory;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -22,7 +21,7 @@ public class VirtualThreadSourceAnalyzer implements SourceAnalyzer {
     @Override
     public Future<Report> getReport(Directory directory) {
         ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
-        return executor.submit(new VTDirectoryCallable(directory, configuration, executor));
+        return executor.submit(new VTDirectoryTask(directory, configuration, executor));
     }
 
     @Override
