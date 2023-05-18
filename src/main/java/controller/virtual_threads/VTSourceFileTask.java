@@ -19,7 +19,12 @@ public class VTSourceFileTask implements Callable<Report> {
     }
 
     @Override
-    public Report call() throws Exception {
-        return new ReportImpl(searchInstance.getConfiguration(), file.getName(), file.linesCount());
+    public Report call() {
+        Report localReport = new ReportImpl(searchInstance.getConfiguration(), file.getName(), file.linesCount());
+        searchInstance.getReport().ifPresent(r -> {
+            r.aggregate(localReport);
+            r.notifyUpdate();
+        });
+        return localReport;
     }
 }
