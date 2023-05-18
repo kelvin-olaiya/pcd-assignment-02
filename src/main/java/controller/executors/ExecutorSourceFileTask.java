@@ -6,12 +6,12 @@ import model.resources.SourceFile;
 
 import java.util.concurrent.RecursiveTask;
 
-public class SourceFileAnalyzerTask extends RecursiveTask<Report> {
+public class ExecutorSourceFileTask extends RecursiveTask<Report> {
 
     private final SourceFile sourceFile;
     private final SearchInstance searchInstance;
 
-    SourceFileAnalyzerTask(SourceFile sourceFile, SearchInstance searchInstance) {
+    ExecutorSourceFileTask(SourceFile sourceFile, SearchInstance searchInstance) {
         this.sourceFile = sourceFile;
         this.searchInstance = searchInstance;
     }

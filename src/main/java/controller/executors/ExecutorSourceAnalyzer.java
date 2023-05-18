@@ -21,14 +21,14 @@ public class ExecutorSourceAnalyzer implements SourceAnalyzer {
 
     public static RecursiveTask<Report> fromResource(Resource resource, SearchInstance searchInstance) {
         return resource instanceof Directory ?
-                new DirectoryAnalyzerTask((Directory) resource, searchInstance) :
-                new SourceFileAnalyzerTask((SourceFile) resource, searchInstance);
+                new ExecutorDirectoryTask((Directory) resource, searchInstance) :
+                new ExecutorSourceFileTask((SourceFile) resource, searchInstance);
     }
 
     @Override
     public Future<Report> getReport(Directory directory) {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
-        return forkJoinPool.submit(new DirectoryAnalyzerTask(
+        return forkJoinPool.submit(new ExecutorDirectoryTask(
                 directory,
                 new SearchInstance(this.searchConfiguration)));
     }
@@ -38,7 +38,7 @@ public class ExecutorSourceAnalyzer implements SourceAnalyzer {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
         CompletableReport completableReport = new ObservableReportImpl(this.searchConfiguration);
         final SearchInstance searchInstance = new SearchInstance(this.searchConfiguration, completableReport);
-        var future = forkJoinPool.submit(new DirectoryAnalyzerTask(directory, searchInstance));
+        var future = forkJoinPool.submit(new ExecutorDirectoryTask(directory, searchInstance));
         completableReport.addOnAbortHandler(() -> {
             forkJoinPool.shutdownNow();
             forkJoinPool.close();

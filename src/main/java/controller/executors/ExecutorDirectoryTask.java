@@ -11,12 +11,12 @@ import java.util.concurrent.RecursiveTask;
 
 import static controller.executors.ExecutorSourceAnalyzer.fromResource;
 
-public class DirectoryAnalyzerTask extends RecursiveTask<Report> {
+public class ExecutorDirectoryTask extends RecursiveTask<Report> {
 
     private final Directory directory;
     private final SearchInstance searchInstance;
 
-    DirectoryAnalyzerTask(Directory directory, SearchInstance searchInstance) {
+    ExecutorDirectoryTask(Directory directory, SearchInstance searchInstance) {
         this.directory = directory;
         this.searchInstance = searchInstance;
     }
