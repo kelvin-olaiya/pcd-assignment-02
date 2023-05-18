@@ -1,5 +1,6 @@
 package model.report;
 
+import controller.utils.Monitor;
 import controller.utils.SearchConfiguration;
 
 import java.util.ArrayList;
@@ -12,74 +13,74 @@ public class CompletableReportImpl implements CompletableReport {
     private final List<BiConsumer<List<StatLine>, List<String>>> onUpdateHandlers;
     private final List<Runnable> onAbortHandlers;
     private final List<Runnable> onCompleteHandlers;
-    private final SearchConfiguration searchConfiguration;
+    private final Monitor monitor = new Monitor();
 
     public CompletableReportImpl(SearchConfiguration searchConfiguration) {
-        this.searchConfiguration = searchConfiguration;
         this.report = new ReportImpl(searchConfiguration);
         this.onUpdateHandlers = new ArrayList<>();
         this.onAbortHandlers = new ArrayList<>();
         this.onCompleteHandlers = new ArrayList<>();
     }
 
-
     @Override
-    synchronized public List<Interval> getIntervals() {
-        return this.report.getIntervals();
+    public List<Interval> getIntervals() {
+        return monitor.on(this.report::getIntervals);
     }
 
     @Override
-    synchronized public Integer filesCount(Interval interval) {
-        return this.report.filesCount(interval);
+    public Integer filesCount(Interval interval) {
+        return monitor.on(() -> this.report.filesCount(interval));
     }
 
     @Override
-    synchronized public List<Pair<String, Integer>> longestFiles() {
-        return this.report.longestFiles();
+    public List<Pair<String, Integer>> longestFiles() {
+        return monitor.on(this.report::longestFiles);
     }
 
     @Override
-    synchronized public void aggregate(Report report) {
-        this.report.aggregate(report);
+    public void aggregate(Report report) {
+        monitor.on(() -> this.report.aggregate(report));
     }
 
     @Override
-    synchronized public void addUpdateHandler(BiConsumer<List<StatLine>, List<String>> onUpdateHandler) {
-        this.onUpdateHandlers.add(onUpdateHandler);
+    public void addUpdateHandler(BiConsumer<List<StatLine>, List<String>> onUpdateHandler) {
+        monitor.on(() -> this.onUpdateHandlers.add(onUpdateHandler));
     }
 
     @Override
-    synchronized public void addOnAbortHandler(Runnable onAbortHandler) {
-        this.onAbortHandlers.add(onAbortHandler);
+    public void addOnAbortHandler(Runnable onAbortHandler) {
+        monitor.on(() -> this.onAbortHandlers.add(onAbortHandler));
     }
 
     @Override
-    synchronized public void addOnCompleteHandler(Runnable onCompleteHandler) {
-        this.onCompleteHandlers.add(onCompleteHandler);
+    public void addOnCompleteHandler(Runnable onCompleteHandler) {
+        monitor.on(() -> this.onCompleteHandlers.add(onCompleteHandler));
     }
 
     @Override
-    synchronized public void abort() {
-        this.onAbortHandlers.forEach(Runnable::run);
+    public void abort() {
+        monitor.on(() -> this.onAbortHandlers.forEach(Runnable::run));
     }
 
     @Override
-    synchronized public void notifyUpdate() {
-        var statLines = this.report.getIntervals().stream()
-                .map(interval -> new StatLine(interval, this.report.filesCount(interval)))
-                .toList();
-        this.onUpdateHandlers.forEach(handler -> {
-            handler.accept(statLines, this.report.longestFiles().stream().map(Pair::getX).toList());
+    public void notifyUpdate() {
+        monitor.on(() -> {
+            var statLines = this.report.getIntervals().stream()
+                    .map(interval -> new StatLine(interval, this.report.filesCount(interval)))
+                    .toList();
+            this.onUpdateHandlers.forEach(handler -> {
+                handler.accept(statLines, this.report.longestFiles().stream().map(Pair::getX).toList());
+            });
         });
     }
 
     @Override
-    synchronized public void notifyCompletion() {
-        this.onCompleteHandlers.forEach(Runnable::run);
+    public void notifyCompletion() {
+        monitor.on(() -> this.onCompleteHandlers.forEach(Runnable::run));
     }
 
     @Override
-    synchronized public String toString() {
-        return this.report.toString();
+    public String toString() {
+        return monitor.on(this.report::toString);
     }
 }
