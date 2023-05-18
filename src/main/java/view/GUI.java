@@ -1,8 +1,9 @@
 package view;
 
+import controller.executors.ExecutorSourceAnalyzer;
 import controller.utils.SearchConfiguration;
 import controller.SourceAnalyzer;
-import controller.reactive.RxSourceAnalyzer;
+import controller.virtual_threads.VTSourceAnalyzer;
 import model.resources.Directory;
 
 import javax.swing.*;
@@ -10,6 +11,8 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 public class GUI {
 
@@ -24,8 +27,10 @@ public class GUI {
     private final JTextField directory = new JTextField("./", 20);
     private final JButton startButton = new JButton("START");
     private final JButton stopButton = new JButton("STOP");
+    private final Class<?> sourceAnalyzer;
 
-    public GUI() {
+    public GUI(Class<?> sourceAnalyzer) {
+        this.sourceAnalyzer = sourceAnalyzer;
         frame.setSize(800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Container panel = frame.getContentPane();
@@ -90,10 +95,9 @@ public class GUI {
             int maxLines = (int) maxLinesBox.spinner.getValue();
             int intervals = (int) intervalsBox.spinner.getValue();
             int longestFiles = (int) longestFilesBox.spinner.getValue();
-            // SourceAnalyzer sourceAnalyzer = new ExecutorSourceAnalyzer(new SearchConfiguration(intervals, maxLines, longestFiles));
-            // SourceAnalyzer sourceAnalyzer = new EventLoopSourceAnalyzer(new SearchConfiguration(intervals, maxLines, longestFiles));
-            SourceAnalyzer sourceAnalyzer = new RxSourceAnalyzer(new SearchConfiguration(intervals, maxLines, longestFiles));
-            var report = sourceAnalyzer.analyzeSources(new Directory(new File(directory.getText())));
+            SearchConfiguration searchConfiguration = new SearchConfiguration(intervals, maxLines, longestFiles);
+            SourceAnalyzer sourceAnalyzerInstance = getSourceAnalyzerInstance(this.sourceAnalyzer, searchConfiguration);
+            var report = sourceAnalyzerInstance.analyzeSources(new Directory(new File(directory.getText())));
             report.addUpdateHandler((counter, longestFilesList) -> {
                 SwingUtilities.invokeLater(() -> {
                     countingListModel.clear();
@@ -136,6 +140,19 @@ public class GUI {
         panel.add(controlsPanel, BorderLayout.PAGE_END);
         panel.add(mainPanel, BorderLayout.CENTER);
         frame.setVisible(true);
+    }
+
+    public GUI() {
+        this(ExecutorSourceAnalyzer.class);
+    }
+
+    private SourceAnalyzer getSourceAnalyzerInstance(Class<?> sourceAnalyzer, SearchConfiguration searchConfiguration) {
+        try {
+            return (SourceAnalyzer) sourceAnalyzer.getConstructor(SearchConfiguration.class)
+                    .newInstance(searchConfiguration);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void setSizeForText(JComponent component) {
