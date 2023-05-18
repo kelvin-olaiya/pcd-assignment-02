@@ -45,15 +45,23 @@ public class ExecutorSourceAnalyzer implements SourceAnalyzer {
             forkJoinPool.close();
             completableReport.notifyCompletion();
         });
-        new Thread(() -> {
+        new Thread(getTerminationWaiter(future, completableReport, forkJoinPool), "AwaitTermination").start();
+        return completableReport;
+    }
+
+    private Runnable getTerminationWaiter(
+        Future<Report> masterTask,
+        CompletableReport report,
+        ForkJoinPool forkJoinPool
+    ) {
+        return () -> {
             try {
-                future.get();
-                completableReport.notifyCompletion();
+                masterTask.get();
+                report.notifyCompletion();
                 forkJoinPool.close();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        }).start();
-        return completableReport;
+        };
     }
 }
