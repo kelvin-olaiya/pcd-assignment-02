@@ -77,4 +77,9 @@ public class ObservableReportImpl implements CompletableReport {
     synchronized public void notifyCompletion() {
         this.onCompleteHandlers.forEach(Runnable::run);
     }
+
+    @Override
+    synchronized public String toString() {
+        return this.report.toString();
+    }
 }
