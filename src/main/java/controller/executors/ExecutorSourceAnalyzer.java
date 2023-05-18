@@ -37,7 +37,7 @@ public class ExecutorSourceAnalyzer implements SourceAnalyzer {
     @Override
     public ObservableReport analyzeSources(Directory directory) {
         ForkJoinPool forkJoinPool = new ForkJoinPool();
-        CompletableReport completableReport = new ObservableReportImpl(this.searchConfiguration);
+        CompletableReport completableReport = new CompletableReportImpl(this.searchConfiguration);
         final SearchInstance searchInstance = new SearchInstance(this.searchConfiguration, completableReport);
         var future = forkJoinPool.submit(new ExecutorDirectoryTask(directory, searchInstance));
         completableReport.addOnAbortHandler(() -> {

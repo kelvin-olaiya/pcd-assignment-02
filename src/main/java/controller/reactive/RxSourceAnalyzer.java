@@ -52,7 +52,7 @@ public class RxSourceAnalyzer implements SourceAnalyzer {
     @Override
     public Future<Report> getReport(Directory directory) {
         CompletableFuture<Report> future = new CompletableFuture<>();
-        CompletableReport report = new ObservableReportImpl(this.configuration);
+        CompletableReport report = new CompletableReportImpl(this.configuration);
         fromDirectory(directory)
                 .map(resource -> new ReportImpl(this.configuration, resource.getName(), resource.linesCount()))
                 .doOnNext(report::aggregate)
@@ -63,7 +63,7 @@ public class RxSourceAnalyzer implements SourceAnalyzer {
 
     @Override
     public ObservableReport analyzeSources(Directory directory) {
-        CompletableReport report = new ObservableReportImpl(this.configuration);
+        CompletableReport report = new CompletableReportImpl(this.configuration);
         Flag stopFlag = new Flag();
         report.addOnAbortHandler(stopFlag::set);
         fromDirectory(directory, stopFlag).subscribeOn(Schedulers.io())

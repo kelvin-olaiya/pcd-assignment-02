@@ -6,7 +6,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.EventBus;
 import model.report.CompletableReport;
 import model.report.ObservableReport;
-import model.report.ObservableReportImpl;
+import model.report.CompletableReportImpl;
 import model.report.Report;
 import model.resources.Directory;
 
@@ -31,7 +31,7 @@ public class EventLoopSourceAnalyzer implements SourceAnalyzer {
 
     @Override
     public ObservableReport analyzeSources(Directory directory) {
-        CompletableReport completableReport = new ObservableReportImpl(this.configuration);
+        CompletableReport completableReport = new CompletableReportImpl(this.configuration);
         Vertx vertx = Vertx.vertx();
         var verticle = new ObservableVerticleSourceAnalyzer(directory, this.configuration, completableReport);
         vertx.deployVerticle(verticle);

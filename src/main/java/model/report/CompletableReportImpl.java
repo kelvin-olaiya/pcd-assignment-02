@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public class ObservableReportImpl implements CompletableReport {
+public class CompletableReportImpl implements CompletableReport {
 
     private final Report report;
     private final List<BiConsumer<List<StatLine>, List<String>>> onUpdateHandlers;
@@ -14,7 +14,7 @@ public class ObservableReportImpl implements CompletableReport {
     private final List<Runnable> onCompleteHandlers;
     private final SearchConfiguration searchConfiguration;
 
-    public ObservableReportImpl(SearchConfiguration searchConfiguration) {
+    public CompletableReportImpl(SearchConfiguration searchConfiguration) {
         this.searchConfiguration = searchConfiguration;
         this.report = new ReportImpl(searchConfiguration);
         this.onUpdateHandlers = new ArrayList<>();
