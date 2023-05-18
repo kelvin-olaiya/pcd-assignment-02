@@ -66,11 +66,11 @@ public class CompletableReportImpl implements CompletableReport {
     public void notifyUpdate() {
         monitor.on(() -> {
             var statLines = this.report.getIntervals().stream()
-                    .map(interval -> new StatLine(interval, this.report.filesCount(interval)))
-                    .toList();
-            this.onUpdateHandlers.forEach(handler -> {
-                handler.accept(statLines, this.report.longestFiles().stream().map(Pair::getX).toList());
-            });
+                .map(interval -> new StatLine(interval, this.report.filesCount(interval)))
+                .toList();
+            this.onUpdateHandlers.forEach(handler ->
+                handler.accept(statLines, this.report.longestFiles().stream().map(Pair::getX).toList())
+            );
         });
     }
 
