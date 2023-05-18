@@ -1,6 +1,7 @@
 package model.report;
 
 import controller.utils.Monitor;
+import controller.utils.Pair;
 import controller.utils.SearchConfiguration;
 
 import java.util.ArrayList;

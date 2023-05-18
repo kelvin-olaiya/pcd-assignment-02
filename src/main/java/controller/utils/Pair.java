@@ -1,4 +1,4 @@
-package model.report;
+package controller.utils;
 
 import java.util.Objects;
 

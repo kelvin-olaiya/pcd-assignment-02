@@ -1,5 +1,7 @@
 package model.report;
 
+import controller.utils.Pair;
+
 import java.util.List;
 
 public interface Report {
