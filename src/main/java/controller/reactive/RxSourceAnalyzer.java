@@ -31,21 +31,23 @@ public class RxSourceAnalyzer implements SourceAnalyzer {
 
     private Observable<SourceFile> fromDirectory(Directory directory, Flag stopFlag) {
         Observable<SourceFile> observable = Observable.create(emitter -> {
-            try(var filesStream = Files.walk(Path.of(directory.getAbsolutePath()))) {
-                filesStream.filter(path -> !Files.isDirectory(path))
-                    .map(p -> Resource.fromFile(p.toFile(), Set.of("java")))
-                    .filter(Optional::isPresent)
-                    .map(o -> (SourceFile) o.get())
-                    .forEach(s -> {
-                        if(stopFlag.isSet()) {
-                            throw new RuntimeException();
-                        }
-                        emitter.onNext(s);
-                    });
-            } catch (IOException ignore) {
-            } finally {
-                emitter.onComplete();
-            }
+            new Thread(() -> {
+                try(var filesStream = Files.walk(Path.of(directory.getAbsolutePath()))) {
+                    filesStream.filter(path -> !Files.isDirectory(path))
+                            .map(p -> Resource.fromFile(p.toFile(), Set.of("java")))
+                            .filter(Optional::isPresent)
+                            .map(o -> (SourceFile) o.get())
+                            .forEach(s -> {
+                                if(stopFlag.isSet()) {
+                                    throw new RuntimeException();
+                                }
+                                emitter.onNext(s);
+                            });
+                } catch (IOException ignore) {
+                } finally {
+                    emitter.onComplete();
+                }
+            }).start();
         });
         return observable;
     }
