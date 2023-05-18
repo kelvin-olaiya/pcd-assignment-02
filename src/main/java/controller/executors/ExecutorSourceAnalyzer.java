@@ -28,10 +28,11 @@ public class ExecutorSourceAnalyzer implements SourceAnalyzer {
 
     @Override
     public Future<Report> getReport(Directory directory) {
-        ForkJoinPool forkJoinPool = new ForkJoinPool();
-        return forkJoinPool.submit(new ExecutorDirectoryTask(
-                directory,
-                new SearchInstance(this.searchConfiguration)));
+        try (ForkJoinPool forkJoinPool = new ForkJoinPool()) {
+            return forkJoinPool.submit(
+                new ExecutorDirectoryTask(directory, new SearchInstance(this.searchConfiguration))
+            );
+        }
     }
 
     @Override
