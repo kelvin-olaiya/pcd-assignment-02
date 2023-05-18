@@ -33,13 +33,12 @@ public class VTSourceAnalyzer implements SourceAnalyzer {
         CompletableReport completableReport = new CompletableReportImpl(configuration);
         ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
         completableReport.addOnAbortHandler(() -> {
-            executor.shutdownNow();
             completableReport.notifyCompletion();
-            executor.close();
+            executor.shutdownNow();
         });
         SearchInstance searchInstance = new SearchInstance(configuration, completableReport);
         Future<Report> future = executor.submit(new VTDirectoryTask(directory, searchInstance, executor));
-        new Thread(getTerminationWaiter(future, completableReport, executor), "AwaitTermination").start();
+        Thread.ofVirtual().start(getTerminationWaiter(future, completableReport, executor));
         return completableReport;
     }
 
@@ -47,11 +46,12 @@ public class VTSourceAnalyzer implements SourceAnalyzer {
         return () -> {
             try {
                 masterTask.get();
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(e);
+            } catch (InterruptedException | ExecutionException ignored) {
+            } finally {
+                report.notifyCompletion();
+                executor.shutdownNow();
+                executor.close();
             }
-            report.notifyCompletion();
-            executor.close();
         };
     }
 }

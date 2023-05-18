@@ -130,7 +130,7 @@ public class GUI {
                     stopButton.setEnabled(false);
                 });
             };
-            for(var l : stopButton.getActionListeners() ) {
+            for(var l : stopButton.getActionListeners()) {
                 stopButton.removeActionListener(l);
             }
             stopButton.addActionListener(al);
