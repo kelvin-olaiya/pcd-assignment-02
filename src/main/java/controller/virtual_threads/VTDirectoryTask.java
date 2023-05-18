@@ -4,6 +4,7 @@ import controller.SearchConfiguration;
 import model.report.Report;
 import model.report.ReportImpl;
 import model.resources.Directory;
+import model.resources.Resource;
 import model.resources.SourceFile;
 
 import java.io.IOException;
@@ -25,20 +26,20 @@ public class VTDirectoryTask implements Callable<Report> {
         this.executor = executor;
     }
 
+    private Callable<Report> fromResource(Resource resource) {
+        if (resource instanceof Directory directoryResource) {
+            return new VTDirectoryTask(directoryResource, configuration, executor);
+        }
+        return new VTSourceFileTask((SourceFile) resource, configuration);
+    }
+
     @Override
     public Report call() throws Exception {
         List<Future<Report>> results = new ArrayList<>();
         try {
             for (var resource : directory.getResources()) {
-                Future<Report> future = null;
-                if (resource instanceof Directory directoryResource) {
-                    future = executor.submit(new VTDirectoryTask(directoryResource, configuration, executor));
-                } else if (resource instanceof SourceFile sourceFileResource) {
-                    future = executor.submit(new VTSourceFileTask(sourceFileResource, configuration));
-                }
-                if (future != null) {
-                    results.add(future);
-                }
+                Future<Report> future = executor.submit(fromResource(resource));
+                results.add(future);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
