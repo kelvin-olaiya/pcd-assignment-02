@@ -1,6 +1,7 @@
 package controller.virtual_threads;
 
 import controller.utils.SearchConfiguration;
+import controller.utils.SearchInstance;
 import model.report.Report;
 import model.report.ReportImpl;
 import model.resources.SourceFile;
@@ -10,15 +11,15 @@ import java.util.concurrent.Callable;
 public class VTSourceFileTask implements Callable<Report> {
 
     private final SourceFile file;
-    private final SearchConfiguration configuration;
+    private final SearchInstance searchInstance;
 
-    VTSourceFileTask(SourceFile file, SearchConfiguration configuration) {
+    VTSourceFileTask(SourceFile file, SearchInstance searchInstance) {
         this.file = file;
-        this.configuration = configuration;
+        this.searchInstance = searchInstance;
     }
 
     @Override
     public Report call() throws Exception {
-        return new ReportImpl(configuration, file.getName(), file.linesCount());
+        return new ReportImpl(searchInstance.getConfiguration(), file.getName(), file.linesCount());
     }
 }

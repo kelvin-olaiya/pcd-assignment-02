@@ -1,6 +1,7 @@
 package controller.virtual_threads;
 
 import controller.utils.SearchConfiguration;
+import controller.utils.SearchInstance;
 import model.report.Report;
 import model.report.ReportImpl;
 import model.resources.Directory;
@@ -18,11 +19,11 @@ public class VTDirectoryTask implements Callable<Report> {
 
     private final Directory directory;
     private final ExecutorService executor;
-    private final SearchConfiguration configuration;
+    private final SearchInstance searchInstance;
 
-    VTDirectoryTask(Directory directory, SearchConfiguration configuration, ExecutorService executor) {
+    VTDirectoryTask(Directory directory, SearchInstance configuration, ExecutorService executor) {
         this.directory = directory;
-        this.configuration = configuration;
+        this.searchInstance = configuration;
         this.executor = executor;
     }
 
@@ -37,7 +38,7 @@ public class VTDirectoryTask implements Callable<Report> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        var report = new ReportImpl(configuration);
+        var report = new ReportImpl(searchInstance.getConfiguration());
         for (var result: results) {
             report.aggregate(result.get());
         }
@@ -46,8 +47,8 @@ public class VTDirectoryTask implements Callable<Report> {
 
     private Callable<Report> fromResource(Resource resource) {
         if (resource instanceof Directory directoryResource) {
-            return new VTDirectoryTask(directoryResource, configuration, executor);
+            return new VTDirectoryTask(directoryResource, searchInstance, executor);
         }
-        return new VTSourceFileTask((SourceFile) resource, configuration);
+        return new VTSourceFileTask((SourceFile) resource, searchInstance);
     }
 }

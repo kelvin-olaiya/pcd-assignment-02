@@ -2,6 +2,7 @@ package controller.virtual_threads;
 
 import controller.utils.SearchConfiguration;
 import controller.SourceAnalyzer;
+import controller.utils.SearchInstance;
 import model.report.ObservableReport;
 import model.report.Report;
 import model.resources.Directory;
@@ -21,7 +22,7 @@ public class VTSourceAnalyzer implements SourceAnalyzer {
     @Override
     public Future<Report> getReport(Directory directory) {
         ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
-        return executor.submit(new VTDirectoryTask(directory, configuration, executor));
+        return executor.submit(new VTDirectoryTask(directory, new SearchInstance(configuration), executor));
     }
 
     @Override
