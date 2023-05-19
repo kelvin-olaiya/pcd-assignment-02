@@ -32,7 +32,21 @@ Invece, per quanto riguarda `analyzeSources(Directory directory)`, verrà restit
 
 ## Executor
 
+L'approccio mediante _Executor_ è stato implementato mediante l'utilizzo di un _ForkJoinPool_.
+Per la divisione del lavoro, sono stati individuati i seguenti _Recursive Task_:
 
+- **DirectoryAnalyzerTask**:
+    1. Partendo da un Path di directory, si analizza il contenuto.
+    2. Per ogni elemento:
+        - se è un path di Directory, si esegue una _fork_ di un nuovo _DirectoryAnalyzerTask_,
+        - se è un path di File, si esegue una _fork_ di un nuovo _SourceFileAnalyzerTask_.
+    3. Si esegue _join_ su ogni _fork_.
+    4. Si aggregano i risultati.
+- **SourceFileAnalyzerTask**:
+    1. Partendo da un Path di file, si legge il contenuto.
+    2. Si crea il report del file.
+
+![TaskExecutor](./docs/img/executor-tasks.jpg)
 
 ## Virtual Threads
 
