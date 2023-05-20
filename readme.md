@@ -75,6 +75,12 @@ Il flow dell'esecuzione è il seguente:
 
 ![EventLoop](./docs/img/event-loop-flow.jpg)
 
+Il problema principale di questo approccio è quello di capire quando la computazione è terminata, dal momento che le esecuzioni delle computazioni sono asincrone.
+L'implementazione realizzata prevede di mantenere un contatore che viene incrementato ad ogni chiamata asincrona e decrementato al completamento.
+In questo modo l'ultima chiamata asincrona decrementerà porta il contatore a 0, permettendo di notificare il completamento della computazione.
+
+Per quanto riguarda l'implementazione della versione _GUI_ viene riutilizzato quasi completamente l'approccio _CLI_, aggiungendo una comunicazione attraverso l'`EventBus` di Vertx.
+In questo modo, per terminare la computazione tramite l'interfaccia, è sufficiente inviare un messaggio sul _Bus_, che verrà ricevuto dal _Verticle_.
 
 ## Reactive
 
