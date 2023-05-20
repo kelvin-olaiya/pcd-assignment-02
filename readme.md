@@ -60,6 +60,21 @@ Invece, per la versione _GUI_, è stato necessario utilizzare _Monitor_, in modo
 ## Event Loop
 
 L'approccio a _Event Loop_ è stato implementato utilizzando la libreria [Vertx](https://vertx.io).
+L'architettura realizzata prevede un singolo _Verticle_ che si occupa di eseguire l'esplorazione ricorsiva delle directory e calcolare il report dell'analisi.
+Questo approccio permette di evitare corse critiche, riducendo il codice necessario per la sincronizzazione.
+
+Il flow dell'esecuzione è il seguente:
+
+1. Partendo da un _Path_, viene eseguita una chiamata asincrona per richiedere le sue _props_.
+2. Dalle _props_ si può ricavare l'informazione sul _Path_:
+    - se è una directory, si esegue una chiamata asincrona per leggerne il contenuto,
+    - se è un file, si esegue una chiamata asincrona per leggere il contenuto del file.
+3. Al completarsi delle chiamate asincrone:
+    - per ogni elemento della directory, si riparte dal punto 1,
+    - per il contenuto del file, si crea il report e lo si aggrega al risultato.
+
+![EventLoop](./docs/img/event-loop-flow.jpg)
+
 
 ## Reactive
 
