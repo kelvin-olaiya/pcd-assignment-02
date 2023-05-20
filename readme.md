@@ -55,7 +55,25 @@ Invece, per la versione _GUI_, è stato necessario utilizzare _Monitor_, in modo
 
 ## Virtual Threads
 
+L'approccio mediante l'utilizzo di _Virtual Threads_ riutilizza l'idea con cui è stata realizzata l'implementazione _Executor_.
 
+La differenza principale è l'utilizzo di un `newVirtualThreadPerTaskExecutor`, i cui task sottomessi sono delle `Callable`.
+
+Anche in questo sono individuate i due task principali:
+
+- **VTDirectoryTask**:
+    1. Partendo da un Path di directory, si analizza il contenuto.
+    2. Per ogni elemento:
+        - se è un path di Directory, si sottomette una _Callable_ _VTDirectoryTask_,
+        - se è un path di File, si sottomette una _Callable_ _VTSourceFileTask_.
+    3. Si esegue una join sulle _Callable_ e si aggregano i risultati.
+- **VTSourceFileTask**:
+    1. Partendo da un Path di file, si legge il contenuto.
+    2. Si crea il report del file.
+
+Come per l'approccio precedente, anche in questo caso l'implementazione favorisce la versione _CLI_, permettendo di esplorare ricorsivamente, con gli opportuni `Callable`, aggregando successivamente i risultati parziali e minimizzando le corse critiche.
+
+Invece, per la versione _GUI_, viene utilizzato il _Monitor_, come descritto in precedenza.
 
 ## Event Loop
 
