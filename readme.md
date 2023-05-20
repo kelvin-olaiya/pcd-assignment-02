@@ -102,3 +102,11 @@ In questo modo, per terminare la computazione tramite l'interfaccia, è sufficie
 
 ## Reactive
 
+L'approccio _Reactive_ è stato implementato utilizzando la libreria [RxJava](https://github.com/ReactiveX/RxJava).
+
+La parte principale di questo approccio è la creazione di un `Observable`, che permette di esplorare la directory di partenza.
+Ad esso sono aggiunte le opportune operazioni di _Map_ e _Filter_, per ottenere il contenuto dei File e poterli aggregare.
+
+Si è creato un `Observable`, invece che un `Flowable`, poiché lo stream dei files è lazy, così non è necessario gestire il meccanismo di _Backpressure_.
+
+Le differenze tra _CLI_ e _GUI_ sono minime. Nel secondo caso è necessario notificare l'_Observer_ per poter stampare a video i progressi intermedi.
