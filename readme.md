@@ -110,3 +110,55 @@ Ad esso sono aggiunte le opportune operazioni di _Map_ e _Filter_, per ottenere 
 Si è creato un `Observable`, invece che un `Flowable`, poiché lo stream dei files è lazy, così non è necessario gestire il meccanismo di _Backpressure_.
 
 Le differenze tra _CLI_ e _GUI_ sono minime. Nel secondo caso è necessario notificare l'_Observer_ per poter stampare a video i progressi intermedi.
+
+## Performance
+
+Condizioni di testing:
+
+- CPU: Intel Core i7-8700 @ 3.20GHz, 6 Core, 12 Thread
+- Folder: [Repo JDK](https://github.com/openjdk/jdk)
+- Parametri:
+    - maxLines:     1000
+    - intervalli:   50
+    - longestFiles: 250
+- Numero di esecuzioni: 10
+
+### CLI
+
+La soluzione più performante in termini di tempo è quella basata su _Executor_, seguita subito da quella basata su _Virtual Threads_.
+
+Il risultato che l'implementazione a _Event Loop_ è la più lenta era atteso, poiché la computazione è svolta da un singolo thread.
+
+| N. | Executor (ms) | VirtualThread (ms) | EventLoop (ms) | Reactive (ms) |
+|----|---------------|--------------------|----------------|---------------|
+| 1  |      4077     |        5785        |      52132     |      18412    |
+| 2  |      3354     |        3414        |      52171     |      16965    |
+| 3  |      3114     |        3072        |      50270     |      17005    |
+| 4  |      3044     |        3105        |      51961     |      16907    |
+| 5  |      3210     |        3159        |      51622     |      17104    |
+| 6  |      3130     |        3070        |      52242     |      18175    |
+| 7  |      3036     |        3141        |      51835     |      18094    |
+| 8  |      2901     |        3088        |      50788     |      17191    |
+| 9  |      2975     |        3235        |      51232     |      16776    |
+| 10 |      3141     |        3136        |      50780     |      16813    |
+
+![Performance CLI](./docs/cli-histo.png)
+
+### GUI
+
+Anche nelle implementazioni per la _GUI_ vediamo un andamento delle performance paragonabile, notando un incremento generale dei tempi di esecuzione.
+
+| N. | Executor (ms) | VirtualThread (ms) | EventLoop (ms) | Reactive (ms) |
+|----|---------------|--------------------|----------------|---------------|
+| 1  |      5081     |         7155       |      55118     |     21740     |
+| 2  |      4684     |         5415       |      52816     |     21099     |
+| 3  |      4640     |         4941       |      53943     |     21213     |
+| 4  |      4888     |         4946       |      53893     |     20279     |
+| 5  |      4717     |         4713       |      52778     |     20931     |
+| 6  |      4482     |         4713       |      52957     |     20284     |
+| 7  |      4441     |         4885       |      52737     |     22182     |
+| 8  |      4670     |         4628       |      52047     |     20236     |
+| 9  |      4546     |         4740       |      54733     |     20310     |
+| 10 |      4436     |         4859       |      52925     |     20783     |
+
+![Performance GUI](./docs/gui-histo.png)
