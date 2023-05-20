@@ -13,8 +13,8 @@ interface SourceAnalyzer {
 }
 ```
 
-Nel caso di `getReport(Directory directory)`, verrà restituita una _Future_, che sarà completata, in modo asincrono, con il risultato dell'analisi. 
-Questo permette, in tutti i casi, di sottomettere la computazione e successivamente attendere il risultato, bloccando opportunamente il Thread che vuole ottenere il risultato.
+Nel caso di `getReport(Directory directory)`, verrà restituita una _Future_, che sarà completata, in modo asincrono, con il report dell'analisi. 
+Questo permette, in tutti i casi, di sottomettere la computazione e poter successivamente attendere, bloccando opportunamente il Thread che vuole ottenere il risultato.
 
 Un approccio alternativo è quello di aggiungere un _Runnable_ al metodo, che verrà eseguito quando la computazione sarà completata.
 Questo permette di non dover attendere un risultato, ma il codice specificato, sarà eseguito al termine del calcolo delle statistiche (e.g una stampa a video del risultato).
@@ -47,6 +47,11 @@ Per la divisione del lavoro, sono stati individuati i seguenti _Recursive Task_:
     2. Si crea il report del file.
 
 ![TaskExecutor](./docs/img/executor-tasks.jpg)
+
+Questo approccio facilita la versione _CLI_, permettendo di esplorare ricorsivamente, con gli opportuni `RecursiveTask`, aggregando successivamente i risultati parziali.
+Solo alla fine viene viene ritornato il risultato finale.
+
+Invece, per la versione _GUI_, è stato necessario utilizzare _Monitor_, in modo da poter notificare e stampare a video le statistiche incrementate gradualmente.
 
 ## Virtual Threads
 
