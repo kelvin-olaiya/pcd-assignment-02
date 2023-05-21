@@ -1,5 +1,10 @@
 # PCD Assignment 02
 
+Componenti:
+
+- Manuel Andruccioli, manuel.andruccioli@studio.unibo.it
+- Kelvin Olaiya,      kelvinoluwada.olaiya@studio.unibo.it
+
 ## Introduzione
 
 L'obiettivo è quello di affrontare il problema descritto nell'assignment 1, utilizzando quattro diversi approcci di programmazione _asincrona_, descritti di seguito.
