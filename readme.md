@@ -141,6 +141,7 @@ Il risultato che l'implementazione a _Event Loop_ è la più lenta era atteso, p
 | 8  |      2901     |        3088        |      50788     |      17191    |
 | 9  |      2975     |        3235        |      51232     |      16776    |
 | 10 |      3141     |        3136        |      50780     |      16813    |
+|mean|      3198,2   |        3420,5      |      51503,3   |      17344    |
 
 ![Performance CLI](./docs/cli-histo.png)
 
@@ -160,5 +161,6 @@ Anche nelle implementazioni per la _GUI_ vediamo un andamento delle performance 
 | 8  |      4670     |         4628       |      52047     |     20236     |
 | 9  |      4546     |         4740       |      54733     |     20310     |
 | 10 |      4436     |         4859       |      52925     |     20783     |
+|mean|      4658,5   |         5099,5     |      53394,7   |     20905,7   |
 
 ![Performance GUI](./docs/gui-histo.png)
