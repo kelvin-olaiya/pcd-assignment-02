@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.guava:guava:31.1-jre")
+    implementation("com.google.guava:guava:33.4.0-jre")
     implementation("io.vertx:vertx-core:4.4.1")
     runtimeOnly("io.netty:netty-resolver-dns-native-macos:4.1.72.Final:osx-aarch_64")
     implementation("io.reactivex.rxjava3:rxjava:3.1.6")
